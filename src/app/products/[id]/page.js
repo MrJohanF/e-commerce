@@ -2,25 +2,63 @@
 import { Star, ShoppingCart, ChevronRight } from "lucide-react";
 import Link from "next/link";
 
-// We can create a helper function to fetch product data
+// 1. Define simple header & footer inline:
+function Header() {
+  return (
+    <header className="bg-white/80 backdrop-blur-md border-b border-gray-100 z-50">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between h-16">
+          <a
+            href="/"
+            className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent"
+          >
+            Tienda Virtual
+          </a>
+          <nav className="space-x-8 hidden md:flex">
+            <a href="/" className="text-gray-600 hover:text-purple-600">
+              Inicio
+            </a>
+            <a href="/products" className="text-gray-600 hover:text-purple-600">
+              Productos
+            </a>
+            <a href="#" className="text-gray-600 hover:text-purple-600">
+              Nosotros
+            </a>
+            <a href="#" className="text-gray-600 hover:text-purple-600">
+              Contacto
+            </a>
+          </nav>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="bg-gray-900 text-gray-400">
+      <div className="container mx-auto px-4 py-12">
+        <div className="border-t border-gray-800 pt-8 text-center">
+          <p>&copy; {new Date().getFullYear()} Tienda Virtual. Todos los derechos reservados.</p>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+// 2. Fetch your product data:
 async function getProductData(id) {
-  // In a production app, you might add error handling or `revalidate` config
-  const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/products/${id}`, {
-    // If you want to always fetch the latest data,
-    // you can specify cache options in Next 13:
+  const res = await fetch(`http://localhost:3000/api/products/${id}`, {
     cache: "no-store",
   });
-  if (!res.ok) {
-    return null; // or throw new Error("Failed to fetch product");
-  }
+  if (!res.ok) return null;
   return res.json();
 }
 
-// By default, this is a Server Component in Next.js 13.
 export default async function ProductDetailPage({ params }) {
-  // "params" is an object with { id } in it, from the [id] segment
   const product = await getProductData(params.id);
 
+  // If product not found, show a simple message:
   if (!product) {
     return (
       <div className="min-h-screen flex flex-col">
@@ -33,24 +71,25 @@ export default async function ProductDetailPage({ params }) {
     );
   }
 
+  // Otherwise, render the product detail:
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      {/* Main Content */}
       <main className="flex-grow pt-16 bg-gradient-to-br from-purple-50 via-white to-blue-50">
         {/* Breadcrumb */}
         <div className="container mx-auto px-4 py-4 text-sm text-gray-600">
           <Link href="/" className="hover:text-purple-600">
             Inicio
-          </Link>{" "}
-          /{" "}
+          </Link>
+          {" / "}
           <Link href="/products" className="hover:text-purple-600">
             Productos
-          </Link>{" "}
-          / <span className="text-gray-400">{product.name}</span>
+          </Link>
+          {" / "}
+          <span className="text-gray-400">{product.name}</span>
         </div>
 
-        {/* Product Section */}
+        {/* Product Details */}
         <section className="container mx-auto px-4 py-8">
           <div className="flex flex-col md:flex-row gap-12">
             {/* Images */}
