@@ -1,33 +1,64 @@
 // app/products/[id]/page.js
+
+"use client";
+
+import React from "react";
 import { Star, ShoppingCart, ChevronRight } from "lucide-react";
 import Link from "next/link";
 
+
 // 1. Define simple header & footer inline:
 function Header() {
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+
   return (
-    <header className="bg-white/80 backdrop-blur-md border-b border-gray-100 z-50">
+    <header className="fixed w-full bg-white/80 backdrop-blur-md z-50 border-b border-gray-100">
+      {" "}
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          <a
-            href="/"
-            className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent"
-          >
-            Tienda Virtual
-          </a>
-          <nav className="space-x-8 hidden md:flex">
-            <a href="/" className="text-gray-600 hover:text-purple-600">
-              Inicio
-            </a>
-            <a href="/products" className="text-gray-600 hover:text-purple-600">
-              Productos
-            </a>
-            <a href="#" className="text-gray-600 hover:text-purple-600">
-              Nosotros
-            </a>
-            <a href="#" className="text-gray-600 hover:text-purple-600">
-              Contacto
-            </a>
-          </nav>
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between h-16">
+            <Link
+              href="/"
+              className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent"
+            >
+              Tienda Virtual
+            </Link>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex space-x-8">
+              {["Inicio", "Productos", "Nosotros", "Contactanos"].map(
+                (item) => (
+                  <Link
+                    key={item}
+                    href={item === "Inicio" ? "/" : `/${item.toLowerCase()}`}
+                    className="text-gray-600 hover:text-purple-600 transition-colors font-medium"
+                  >
+                    {item}
+                  </Link>
+                )
+              )}
+            </nav>
+
+            <div className="flex items-center space-x-4">
+            <Link
+              href="/cart"
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            >
+              <ShoppingCart className="w-6 h-6 text-gray-600" />
+            </Link>
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="md:hidden p-2 hover:bg-gray-100 rounded-full transition-colors"
+            >
+              {isMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
+            </button>
+          </div>
+
+          </div>
         </div>
       </div>
     </header>
@@ -39,7 +70,10 @@ function Footer() {
     <footer className="bg-gray-900 text-gray-400">
       <div className="container mx-auto px-4 py-12">
         <div className="border-t border-gray-800 pt-8 text-center">
-          <p>&copy; {new Date().getFullYear()} Tienda Virtual. Todos los derechos reservados.</p>
+          <p>
+            &copy; {new Date().getFullYear()} Tienda Virtual. Todos los derechos
+            reservados.
+          </p>
         </div>
       </div>
     </footer>
@@ -146,7 +180,9 @@ export default async function ProductDetailPage({ params }) {
                 </div>
               )}
 
-              <p className="text-gray-600 text-lg mb-6">{product.description}</p>
+              <p className="text-gray-600 text-lg mb-6">
+                {product.description}
+              </p>
 
               <div className="mb-6">
                 <span className="text-3xl font-bold text-purple-600">

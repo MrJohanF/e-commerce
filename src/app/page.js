@@ -1,6 +1,6 @@
 // pages/index.js
 
-"use client"; // Only if you’re on Next.js 13+ with the Pages Router. Otherwise, you can remove this.
+"use client"; // 1. Import the client-side runtime
 
 import React from "react";
 import Link from "next/link";
