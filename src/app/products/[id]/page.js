@@ -1,86 +1,21 @@
-// app/products/[id]/page.js
-
-"use client";
-
-import React from "react";
-import { Star, ShoppingCart, ChevronRight } from "lucide-react";
-import Link from "next/link";
-
-
-// 1. Define simple header & footer inline:
-function Header() {
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-
-  return (
-    <header className="fixed w-full bg-white/80 backdrop-blur-md z-50 border-b border-gray-100">
-      {" "}
-      <div className="container mx-auto px-4">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-16">
-            <Link
-              href="/"
-              className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent"
-            >
-              Tienda Virtual
-            </Link>
-
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex space-x-8">
-              {["Inicio", "Productos", "Nosotros", "Contactanos"].map(
-                (item) => (
-                  <Link
-                    key={item}
-                    href={item === "Inicio" ? "/" : `/${item.toLowerCase()}`}
-                    className="text-gray-600 hover:text-purple-600 transition-colors font-medium"
-                  >
-                    {item}
-                  </Link>
-                )
-              )}
-            </nav>
-
-            <div className="flex items-center space-x-4">
-            <Link
-              href="/cart"
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-            >
-              <ShoppingCart className="w-6 h-6 text-gray-600" />
-            </Link>
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden p-2 hover:bg-gray-100 rounded-full transition-colors"
-            >
-              {isMenuOpen ? (
-                <X className="w-6 h-6" />
-              ) : (
-                <Menu className="w-6 h-6" />
-              )}
-            </button>
-          </div>
-
-          </div>
-        </div>
-      </div>
-    </header>
-  );
-}
+import React from 'react';
+import { Star, ShoppingCart, ChevronRight, Heart, Share2, Truck, Shield, ArrowLeft } from 'lucide-react';
+import Link from 'next/link';
+import Image from 'next/image';
+import Header from '../../components/header.js';
 
 function Footer() {
   return (
     <footer className="bg-gray-900 text-gray-400">
       <div className="container mx-auto px-4 py-12">
         <div className="border-t border-gray-800 pt-8 text-center">
-          <p>
-            &copy; {new Date().getFullYear()} Tienda Virtual. Todos los derechos
-            reservados.
-          </p>
+          <p>&copy; {new Date().getFullYear()} Tienda Virtual. Todos los derechos reservados.</p>
         </div>
       </div>
     </footer>
   );
 }
 
-// 2. Fetch your product data:
 async function getProductData(id) {
   const res = await fetch(`http://localhost:3000/api/products/${id}`, {
     cache: "no-store",
@@ -90,62 +25,83 @@ async function getProductData(id) {
 }
 
 export default async function ProductDetailPage({ params }) {
-  const product = await getProductData(params.id);
+  const { id } = params;
+  const product = await getProductData(id);
 
-  // If product not found, show a simple message:
   if (!product) {
     return (
       <div className="min-h-screen flex flex-col">
         <Header />
         <main className="flex-grow pt-16 flex items-center justify-center">
-          <p className="text-gray-600">No se encontró el producto.</p>
+          <div className="max-w-lg w-full mx-4 p-6 bg-white rounded-xl shadow-sm border border-gray-200">
+            <p className="text-gray-600 text-center mb-4">
+              Lo sentimos, no pudimos encontrar el producto que estás buscando.
+            </p>
+            <Link 
+              href="/products" 
+              className="flex items-center justify-center text-purple-600 hover:text-purple-700 font-medium"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Volver a Productos
+            </Link>
+          </div>
         </main>
         <Footer />
       </div>
     );
   }
 
-  // Otherwise, render the product detail:
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-grow pt-16 bg-gradient-to-br from-purple-50 via-white to-blue-50">
         {/* Breadcrumb */}
-        <div className="container mx-auto px-4 py-4 text-sm text-gray-600">
-          <Link href="/" className="hover:text-purple-600">
-            Inicio
-          </Link>
-          {" / "}
-          <Link href="/products" className="hover:text-purple-600">
-            Productos
-          </Link>
-          {" / "}
-          <span className="text-gray-400">{product.name}</span>
-        </div>
+        <nav className="container mx-auto px-4 py-4">
+          <ol className="flex items-center space-x-2 text-sm">
+            <li>
+              <Link href="/" className="text-gray-600 hover:text-purple-600">
+                Inicio
+              </Link>
+            </li>
+            <ChevronRight className="w-4 h-4 text-gray-400" />
+            <li>
+              <Link href="/products" className="text-gray-600 hover:text-purple-600">
+                Productos
+              </Link>
+            </li>
+            <ChevronRight className="w-4 h-4 text-gray-400" />
+            <li className="text-gray-400 truncate max-w-[200px]">{product.name}</li>
+          </ol>
+        </nav>
 
         {/* Product Details */}
         <section className="container mx-auto px-4 py-8">
-          <div className="flex flex-col md:flex-row gap-12">
-            {/* Images */}
-            <div className="md:w-1/2 flex flex-col gap-4">
-              <div className="relative w-full overflow-hidden rounded-2xl shadow-lg">
-                <img
+          <div className="flex flex-col lg:flex-row gap-12">
+            {/* Image Gallery */}
+            <div className="lg:w-1/2 space-y-6">
+              <div className="aspect-square relative rounded-2xl overflow-hidden bg-white shadow-lg">
+                <Image
                   src={product.images?.[0] || "/placeholder.png"}
                   alt={product.name}
-                  className="w-full h-auto object-cover"
+                  fill
+                  className="object-cover"
+                  priority
+                  sizes="(max-width: 768px) 100vw, 50vw"
                 />
               </div>
-              {product.images && product.images.length > 1 && (
-                <div className="flex gap-4">
+              {product.images?.length > 1 && (
+                <div className="grid grid-cols-4 gap-4">
                   {product.images.map((img, idx) => (
                     <div
                       key={idx}
-                      className="w-20 h-20 rounded-xl border border-gray-200 overflow-hidden cursor-pointer hover:opacity-80"
+                      className="aspect-square relative rounded-xl border border-gray-200 overflow-hidden"
                     >
-                      <img
+                      <Image
                         src={img}
                         alt={`${product.name}-${idx}`}
-                        className="object-cover w-full h-full"
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 25vw, 12vw"
                       />
                     </div>
                   ))}
@@ -153,55 +109,109 @@ export default async function ProductDetailPage({ params }) {
               )}
             </div>
 
-            {/* Info */}
-            <div className="md:w-1/2">
-              <h1 className="text-3xl font-bold text-gray-700 mb-4">
-                {product.name}
-              </h1>
-
-              {/* Rating */}
-              {product.rating && (
-                <div className="flex items-center mb-6">
-                  <div className="flex text-yellow-400 mr-2">
-                    {Array.from({ length: 5 }, (_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-5 h-5 ${
-                          i < Math.floor(product.rating)
-                            ? "fill-current"
-                            : "fill-none stroke-current"
-                        }`}
-                      />
-                    ))}
+            {/* Product Info */}
+            <div className="lg:w-1/2">
+              <div>
+                <div className="flex justify-between items-start mb-6">
+                  <h1 className="text-4xl font-bold text-gray-800">{product.name}</h1>
+                  <div className="flex gap-3">
+                    <form action="/api/wishlist" method="POST">
+                      <input type="hidden" name="productId" value={product.id} />
+                      <button 
+                        type="submit"
+                        className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+                      >
+                        <Heart className="w-6 h-6 text-gray-600" />
+                      </button>
+                    </form>
                   </div>
-                  <p className="text-sm text-gray-500">
-                    {product.rating} de 5 ({product.reviewsCount} reseñas)
+                </div>
+
+                {/* Rating */}
+                {product.rating && (
+                  <div className="flex items-center mb-6 bg-gray-50 p-4 rounded-xl">
+                    <div className="flex text-yellow-400 mr-3">
+                      {Array.from({ length: 5 }, (_, i) => (
+                        <Star
+                          key={i}
+                          className={`w-5 h-5 ${
+                            i < Math.floor(product.rating)
+                              ? "fill-current"
+                              : "fill-none stroke-current"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-700">
+                        {product.rating} de 5
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        Basado en {product.reviewsCount} reseñas
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Description */}
+                <div className="prose prose-purple max-w-none mb-8">
+                  <p className="text-gray-600 leading-relaxed">
+                    {product.description}
                   </p>
                 </div>
-              )}
 
-              <p className="text-gray-600 text-lg mb-6">
-                {product.description}
-              </p>
+                {/* Price and Actions */}
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
+                  <div className="flex items-baseline gap-4 mb-4">
+                    <span className="text-4xl font-bold text-purple-600">
+                      ${product.price}
+                    </span>
+                    {product.oldPrice && (
+                      <span className="text-lg text-gray-400 line-through">
+                        ${product.oldPrice}
+                      </span>
+                    )}
+                  </div>
 
-              <div className="mb-6">
-                <span className="text-3xl font-bold text-purple-600">
-                  ${product.price}
-                </span>
-              </div>
+                  {/* Purchase Actions */}
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <form action="/api/cart" method="POST" className="flex-1">
+                      <input type="hidden" name="productId" value={product.id} />
+                      <button 
+                        type="submit"
+                        className="w-full px-8 py-4 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-medium transition-colors inline-flex items-center justify-center shadow-lg shadow-purple-100"
+                      >
+                        <ShoppingCart className="w-5 h-5 mr-2" />
+                        Agregar al Carrito
+                      </button>
+                    </form>
+                    <Link
+                      href="/cart"
+                      className="flex-1 px-8 py-4 border-2 border-purple-600 text-purple-600 hover:bg-purple-50 rounded-xl font-medium transition-colors inline-flex items-center justify-center"
+                    >
+                      Comprar Ahora
+                      <ChevronRight className="w-5 h-5 ml-2" />
+                    </Link>
+                  </div>
+                </div>
 
-              <div className="flex flex-col sm:flex-row gap-4">
-                <button className="px-8 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-full font-medium transition-colors inline-flex items-center justify-center">
-                  <ShoppingCart className="w-5 h-5 mr-2" />
-                  Agregar al Carrito
-                </button>
-                <Link
-                  href="/cart"
-                  className="px-8 py-3 border border-purple-600 text-purple-600 hover:bg-purple-50 rounded-full font-medium transition-colors inline-flex items-center justify-center"
-                >
-                  Comprar Ahora
-                  <ChevronRight className="w-5 h-5 ml-2" />
-                </Link>
+                {/* Shipping and Warranty */}
+                <div className="grid grid-cols-2 gap-4 mb-8">
+                  <div className="flex items-center gap-3 p-4 bg-white rounded-xl border border-gray-100">
+                    <Truck className="w-8 h-8 text-purple-600" />
+                    <div>
+                      <p className="font-medium text-gray-700">Envío Gratis</p>
+                      <p className="text-sm text-gray-500">2-3 días hábiles</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 p-4 bg-white rounded-xl border border-gray-100">
+                    <Shield className="w-8 h-8 text-purple-600" />
+                    <div>
+                      <p className="font-medium text-gray-700">Garantía</p>
+                      <p className="text-sm text-gray-500">12 meses</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -209,17 +219,17 @@ export default async function ProductDetailPage({ params }) {
 
         {/* Specs */}
         {product.specs && (
-          <section className="container mx-auto px-4 py-8">
-            <h2 className="text-2xl font-bold text-gray-600 mb-4">
-              Especificaciones
+          <section className="container mx-auto px-4 py-12 border-t border-gray-100">
+            <h2 className="text-2xl font-bold text-gray-800 mb-8">
+              Especificaciones Técnicas
             </h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-6 bg-white rounded-xl p-6 shadow border border-gray-100">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {Object.entries(product.specs).map(([key, value]) => (
-                <div key={key} className="text-center">
-                  <h3 className="text-sm font-semibold text-gray-400 uppercase mb-1">
+                <div key={key} className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                  <h3 className="text-sm font-semibold text-gray-400 uppercase mb-2">
                     {key}
                   </h3>
-                  <p className="text-gray-600">{value}</p>
+                  <p className="text-gray-800 font-medium">{value}</p>
                 </div>
               ))}
             </div>

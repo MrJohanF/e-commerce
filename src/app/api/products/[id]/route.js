@@ -39,10 +39,14 @@ const mockProducts = [
 /**
  * Route handler for GET /api/products/[id]
  */
-export async function GET(request, { params }) {
+export async function GET(request, context) {
+  // Await the dynamic params
+  const params = await context.params;
+
+  // Now read id
   const { id } = params;
 
-  // Simulate fetching from DB or external API
+  // Simulate a database / external API lookup
   const product = mockProducts.find((p) => p.id === id);
 
   if (!product) {
