@@ -25,7 +25,7 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8">
-            {["Inicio", "Productos", "Nosotros", "Contactanos"].map((item) => (
+            {["Inicio", "Productos", "Nosotros", "admin"].map((item) => (
               <Link
                 key={item}
                 href={item === "Inicio" ? "/" : `/${item.toLowerCase()}`}
