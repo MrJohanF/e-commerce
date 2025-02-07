@@ -61,7 +61,7 @@ export default function Header() {
       {isMenuOpen && (
         <div className="md:hidden absolute top-16 left-0 w-full bg-white border-b border-gray-100">
           <nav className="container mx-auto px-4 py-4">
-            {["Inicio", "Productos", "Nosotros", "Contacto"].map((item) => (
+            {["Inicio", "Productos", "Nosotros", "Contactanos"].map((item) => (
               <Link
                 key={item}
                 href={item === "Inicio" ? "/" : `/${item.toLowerCase()}`}
