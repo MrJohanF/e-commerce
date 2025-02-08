@@ -40,14 +40,14 @@ const HeroSection = () => (
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
             <Link
-              href="/products"
+              href="/productos"
               className="px-8 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-full font-medium transition-colors inline-flex items-center justify-center"
             >
               Explorar Productos
               <ChevronRight className="w-5 h-5 ml-2" />
             </Link>
             <Link
-              href="/about"
+              href="/nosotros"
               className="px-8 py-3 border border-purple-600 text-purple-600 hover:bg-purple-50 rounded-full font-medium transition-colors inline-flex items-center justify-center"
             >
               Más Información
@@ -269,7 +269,7 @@ const NewsletterSection = () => (
         <form className="flex flex-col sm:flex-row gap-4 justify-center">
           <input
             type="email"
-            placeholder="Enter your email"
+            placeholder="Introduzca su dirección de correo"
             className="flex-1 max-w-sm px-6 py-3 rounded-full border-2 border-transparent focus:border-purple-400 focus:outline-none bg-white/10 text-white placeholder:text-gray-400"
           />
           <button
