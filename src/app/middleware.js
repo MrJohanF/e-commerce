@@ -1,24 +1,32 @@
+// src/middleware.js
 import { NextResponse } from 'next/server'
-import { verifyToken } from './lib/jwt'
+import { verifyToken } from './app/lib/jwt'
 
 export async function middleware(request) {
-  // Rutas que requieren autenticación
-  if (request.nextUrl.pathname.startsWith('/api/admin')) {
-    const token = request.headers.get('authorization')?.split(' ')[1]
-
-    if (!token) {
-      return NextResponse.json(
-        { error: 'No autorizado' },
-        { status: 401 }
-      )
+  // Verificar si la ruta es de administrador
+  if (request.nextUrl.pathname.startsWith('/admin')) {
+    // Excluir la página de login
+    if (request.nextUrl.pathname === '/admin/login') {
+      return NextResponse.next()
     }
 
-    const payload = verifyToken(token)
-    if (!payload || payload.role !== 'ADMIN') {
-      return NextResponse.json(
-        { error: 'No autorizado' },
-        { status: 403 }
-      )
+    const token = request.cookies.get('adminToken')?.value || 
+                 request.headers.get('authorization')?.split(' ')[1]
+
+    if (!token) {
+      return NextResponse.redirect(new URL('/admin/login', request.url))
+    }
+
+    try {
+      const payload = verifyToken(token)
+      
+      if (!payload || payload.role !== 'ADMIN') {
+        return NextResponse.redirect(new URL('/admin/login', request.url))
+      }
+
+      return NextResponse.next()
+    } catch (error) {
+      return NextResponse.redirect(new URL('/admin/login', request.url))
     }
   }
 
@@ -26,5 +34,5 @@ export async function middleware(request) {
 }
 
 export const config = {
-  matcher: ['/api/admin/:path*']
+  matcher: ['/admin/:path*']
 }

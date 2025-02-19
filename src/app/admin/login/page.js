@@ -2,8 +2,10 @@
 
 import React, { useState } from 'react';
 import { Mail, Lock, AlertCircle, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 const AdminLogin = () => {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -17,14 +19,46 @@ const AdminLogin = () => {
     setError('');
 
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      if (email && password) {
-        // Auth logic here
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Error al iniciar sesión');
       }
+
+      // Verificar si el usuario es admin
+      if (data.user.role !== 'ADMIN') {
+        throw new Error('Acceso no autorizado. Solo administradores pueden acceder.');
+      }
+
+      // Guardar el token
+      if (rememberMe) {
+        localStorage.setItem('adminToken', data.token);
+      } else {
+        sessionStorage.setItem('adminToken', data.token);
+      }
+
+      // Guardar información básica del usuario
+      const userData = {
+        id: data.user.id,
+        email: data.user.email,
+        name: data.user.name,
+        role: data.user.role,
+      };
+      
+      localStorage.setItem('adminUser', JSON.stringify(userData));
+
+      // Redireccionar al dashboard
+      router.push('/admin/dashboard');
     } catch (err) {
-      setError('Credenciales no válidas. Por favor, inténtelo de nuevo.');
+      setError(err.message || 'Credenciales no válidas. Por favor, inténtelo de nuevo.');
     } finally {
       setIsLoading(false);
     }
@@ -69,10 +103,10 @@ const AdminLogin = () => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg transition-all duration-200 
+                  className="text-gray-700 block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg transition-all duration-200 
                     focus:ring-2 focus:ring-purple-500 focus:border-purple-500
                     hover:border-gray-400"
-                  placeholder="admin@tiendavirtual.com"
+                  placeholder="admin@tiendaucompensar.com"
                 />
               </div>
             </div>
@@ -93,7 +127,7 @@ const AdminLogin = () => {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full pl-10 pr-12 py-2.5 border border-gray-300 rounded-lg transition-all duration-200
+                  className="text-gray-700 block w-full pl-10 pr-12 py-2.5 border border-gray-300 rounded-lg transition-all duration-200
                     focus:ring-2 focus:ring-purple-500 focus:border-purple-500
                     hover:border-gray-400"
                   placeholder="••••••••"
