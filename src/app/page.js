@@ -20,6 +20,8 @@ import {
   Zap,
 } from "lucide-react";
 import Header from "./components/header.js";
+import Footer from "./components/footer.js";
+
 
 
 const HeroSection = () => (
@@ -284,79 +286,7 @@ const NewsletterSection = () => (
   </section>
 );
 
-const Footer = () => (
-  <footer className="bg-gray-900 text-gray-400">
-    <div className="container mx-auto px-4 py-12">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-        <div>
-          <h3 className="text-white font-semibold mb-4">Productos</h3>
-          <ul className="space-y-2">
-            {["Novedades", "Los más vendidos", "Destacados", "Accesorios"].map(
-              (item) => (
-                <li key={item}>
-                  <Link href="#" className="hover:text-purple-400 transition-colors">
-                    {item}
-                  </Link>
-                </li>
-              )
-            )}
-          </ul>
-        </div>
-        <div>
-          <h3 className="text-white font-semibold mb-4">Empresa</h3>
-          <ul className="space-y-2">
-            {["Quiénes somos", "Carreras profesionales", "Press", "Socios"].map(
-              (item) => (
-                <li key={item}>
-                  <Link href="#" className="hover:text-purple-400 transition-colors">
-                    {item}
-                  </Link>
-                </li>
-              )
-            )}
-          </ul>
-        </div>
-        <div>
-          <h3 className="text-white font-semibold mb-4">Soporte</h3>
-          <ul className="space-y-2">
-            {[
-              "Centro de ayuda",
-              "Contacto con nosotros",
-              "Devoluciones",
-              "Garantía",
-            ].map((item) => (
-              <li key={item}>
-                <Link href="#" className="hover:text-purple-400 transition-colors">
-                  {item}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div>
-          <h3 className="text-white font-semibold mb-4">Legal</h3>
-          <ul className="space-y-2">
-            {[
-              "Política de privacidad",
-              "Condiciones de uso",
-              "Política de cookies",
-              "Conformidad",
-            ].map((item) => (
-              <li key={item}>
-                <Link href="#" className="hover:text-purple-400 transition-colors">
-                  {item}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-      <div className="border-t border-gray-800 mt-12 pt-8 text-center">
-        <p>&copy; {new Date().getFullYear()} Tienda Virtual. Todos los derechos reservados.</p>
-      </div>
-    </div>
-  </footer>
-);
+
 
 export default function Home() {
   return (
