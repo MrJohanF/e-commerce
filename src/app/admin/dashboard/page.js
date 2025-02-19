@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState } from 'react';
-import Navbar from "../components/navbar";
-import AddProductDashboard from "./products/page";
-import ProductsList from "./products/list";
-import AccountSettings from "./account/settings"; 
+import Navbar from "../../components/navbar";
+import AddProductDashboard from "../products/page";
+import ProductsList from "../products/list";
+import AccountSettings from "../account/settings"; 
 
 const AdminDashboard = () => {
   const [activeView, setActiveView] = useState('products'); 
