@@ -2,16 +2,16 @@
 
 "use client";
 
-import React, { useState } from 'react';
-import { Mail, Lock, AlertCircle, Eye, EyeOff, Loader2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import BackToHome from '../../components/backtohome.js';
+import React, { useState } from "react";
+import { Mail, Lock, AlertCircle, Eye, EyeOff, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import BackToHome from "../../components/backtohome.js";
 
 const AdminLogin = () => {
   const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
@@ -19,13 +19,13 @@ const AdminLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setError('');
+    setError("");
 
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
       });
@@ -33,19 +33,21 @@ const AdminLogin = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Error al iniciar sesión');
+        throw new Error(data.error || "Error al iniciar sesión");
       }
 
       // Verificar si el usuario es admin
-      if (data.user.role !== 'ADMIN') {
-        throw new Error('Acceso no autorizado. Solo administradores pueden acceder.');
+      if (data.user.role !== "ADMIN") {
+        throw new Error(
+          "Acceso no autorizado. Solo administradores pueden acceder."
+        );
       }
 
       // Guardar el token
       if (rememberMe) {
-        localStorage.setItem('adminToken', data.token);
+        localStorage.setItem("adminToken", data.token);
       } else {
-        sessionStorage.setItem('adminToken', data.token);
+        sessionStorage.setItem("adminToken", data.token);
       }
 
       // Guardar información básica del usuario
@@ -55,13 +57,15 @@ const AdminLogin = () => {
         name: data.user.name,
         role: data.user.role,
       };
-      
-      localStorage.setItem('adminUser', JSON.stringify(userData));
+
+      localStorage.setItem("adminUser", JSON.stringify(userData));
 
       // Redireccionar al dashboard
-      router.push('/admin/dashboard');
+      router.push("/admin/dashboard");
     } catch (err) {
-      setError(err.message || 'Credenciales no válidas. Por favor, inténtelo de nuevo.');
+      setError(
+        err.message || "Credenciales no válidas. Por favor, inténtelo de nuevo."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -69,17 +73,19 @@ const AdminLogin = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50 flex items-center justify-center p-4">
-        <div className="absolute top-2 sm:top-4 left-2 sm:left-4">
-    <BackToHome />
-  </div>
+
       <div className="max-w-md w-full space-y-6 bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
         {/* Header Section */}
         <div className="text-center space-y-2">
           <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <Lock className="w-8 h-8 text-purple-600" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900">Portal de administración</h1>
-          <p className="text-gray-500">Inicie sesión para gestionar la tienda virtual</p>
+          <h1 className="text-3xl font-bold text-gray-900">
+            Portal de administración
+          </h1>
+          <p className="text-gray-500">
+            Inicie sesión para gestionar la tienda virtual
+          </p>
         </div>
 
         {/* Custom Error Alert */}
@@ -94,7 +100,10 @@ const AdminLogin = () => {
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Correo electrónico
               </label>
               <div className="relative group">
@@ -118,7 +127,10 @@ const AdminLogin = () => {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Contraseña
               </label>
               <div className="relative group">
@@ -128,7 +140,7 @@ const AdminLogin = () => {
                 <input
                   id="password"
                   name="password"
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   autoComplete="current-password"
                   required
                   value={password}
@@ -163,12 +175,18 @@ const AdminLogin = () => {
                 onChange={(e) => setRememberMe(e.target.checked)}
                 className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded transition-colors"
               />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
+              <label
+                htmlFor="remember-me"
+                className="ml-2 block text-sm text-gray-700"
+              >
                 Recordar sesión
               </label>
             </div>
 
-            <button type="button" className="text-sm font-medium text-purple-600 hover:text-purple-500 transition-colors">
+            <button
+              type="button"
+              className="text-sm font-medium text-purple-600 hover:text-purple-500 transition-colors"
+            >
               ¿Olvidó su contraseña?
             </button>
           </div>
@@ -187,14 +205,15 @@ const AdminLogin = () => {
                 Iniciando sesión...
               </>
             ) : (
-              'Iniciar sesión'
+              "Iniciar sesión"
             )}
           </button>
         </form>
 
         {/* Security Notice */}
         <p className="text-xs text-center text-gray-500 mt-8">
-          Esta es un área segura. Por favor, verifique la URL antes de iniciar sesión.
+          Esta es un área segura. Por favor, verifique la URL antes de iniciar
+          sesión.
         </p>
       </div>
     </div>

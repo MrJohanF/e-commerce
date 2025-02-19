@@ -7,19 +7,24 @@ const BackToHome = ({ className = '' }) => {
     <Link 
       href="/"
       className={`
-        inline-flex items-center gap-1 sm:gap-2 
-        px-2 sm:px-4 py-1.5 sm:py-2
-        rounded-lg
-        text-gray-600 hover:text-purple-600 
-        bg-white hover:bg-gray-50
-        shadow-sm hover:shadow
-        transition-all duration-200
-        text-xs sm:text-sm md:text-base
+        inline-flex items-center gap-2
+        px-3 py-2
+        rounded-full
+        text-gray-700 hover:text-purple-600
+        bg-white/80 hover:bg-white
+        border border-gray-100 hover:border-purple-100
+        backdrop-blur-sm
+        shadow-sm hover:shadow-md
+        transition-all duration-300 ease-in-out
+        group
+        text-sm font-medium
         ${className}
       `}
     >
-      <ChevronLeft className="w-3 h-3 sm:w-4 sm:h-4" />
-      <span className="font-medium">Volver al inicio</span>
+      <ChevronLeft 
+        className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform duration-300" 
+      />
+      <span>Volver al inicio</span>
     </Link>
   );
 };
