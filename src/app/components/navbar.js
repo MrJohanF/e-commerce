@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
+import { useRouter } from "next/navigation";
 import {
   Menu,
   Package,
@@ -13,9 +14,30 @@ import {
 } from 'lucide-react';
 
 const Navbar = ({ onViewChange, activeView }) => {
+  const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const [user, setUser] = useState(null);
+
+
+  useEffect(() => {
+    // Verificar si hay un usuario logueado
+    const adminUser = localStorage.getItem('adminUser');
+    if (adminUser) {
+      setUser(JSON.parse(adminUser));
+    }
+  }, []);
+
+
+  const handleLogout = () => {
+    // Limpiar el almacenamiento
+    localStorage.removeItem('adminToken');
+    localStorage.removeItem('adminUser');
+    sessionStorage.removeItem('adminToken');
+    setUser(null);
+    router.push('/');
+  };
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -99,6 +121,7 @@ const Navbar = ({ onViewChange, activeView }) => {
                     <span>Configuración</span>
                   </button>
                   <button
+                    onClick={handleLogout}
                     className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
                   >
                     <LogOut className="h-4 w-4 mr-2" />
