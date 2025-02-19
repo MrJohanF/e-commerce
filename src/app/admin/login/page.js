@@ -5,6 +5,7 @@
 import React, { useState } from 'react';
 import { Mail, Lock, AlertCircle, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import BackToHome from '../../components/backtohome.js';
 
 const AdminLogin = () => {
   const router = useRouter();
@@ -68,6 +69,9 @@ const AdminLogin = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50 flex items-center justify-center p-4">
+        <div className="absolute top-2 sm:top-4 left-2 sm:left-4">
+    <BackToHome />
+  </div>
       <div className="max-w-md w-full space-y-6 bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
         {/* Header Section */}
         <div className="text-center space-y-2">
