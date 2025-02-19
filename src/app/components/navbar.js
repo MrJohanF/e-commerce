@@ -18,26 +18,22 @@ const Navbar = ({ onViewChange, activeView }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
-  const [user, setUser] = useState(null);
-
-
-  useEffect(() => {
-    // Verificar si hay un usuario logueado
-    const adminUser = localStorage.getItem('adminUser');
-    if (adminUser) {
-      setUser(JSON.parse(adminUser));
+ 
+  async function handleLogout() {
+    try {
+      const res = await fetch('/api/auth/logout', {
+        method: 'POST',
+      });
+      if (res.ok) {
+        // Redireccionamos al login
+        router.push('/admin/login');
+      } else {
+        console.error('Error en logout');
+      }
+    } catch (error) {
+      console.error('Error en logout:', error);
     }
-  }, []);
-
-
-  const handleLogout = () => {
-    // Limpiar el almacenamiento
-    localStorage.removeItem('adminToken');
-    localStorage.removeItem('adminUser');
-    sessionStorage.removeItem('adminToken');
-    setUser(null);
-    router.push('/');
-  };
+  }
 
   // Close dropdown when clicking outside
   useEffect(() => {
