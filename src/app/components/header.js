@@ -26,14 +26,22 @@ export default function Header() {
     }
   }, []);
 
-  const handleLogout = () => {
-    // Limpiar el almacenamiento
-    localStorage.removeItem('adminToken');
-    localStorage.removeItem('adminUser');
-    sessionStorage.removeItem('adminToken');
-    setUser(null);
-    router.push('/');
-  };
+  async function handleLogout() {
+    try {
+      const res = await fetch("/api/auth/logout", {
+        method: "POST",
+      });
+      if (res.ok) {
+        // Limpiamos la información guardada y redirigimos
+        localStorage.removeItem("adminUser");
+        router.push("/admin/login");
+      } else {
+        console.error("Error en logout");
+      }
+    } catch (error) {
+      console.error("Error en logout:", error);
+    }
+  }
 
   const navigationLinks = ["Inicio", "Productos", "Nosotros"];
 

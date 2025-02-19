@@ -21,17 +21,18 @@ const Navbar = ({ onViewChange, activeView }) => {
  
   async function handleLogout() {
     try {
-      const res = await fetch('/api/auth/logout', {
-        method: 'POST',
+      const res = await fetch("/api/auth/logout", {
+        method: "POST",
       });
       if (res.ok) {
-        // Redireccionamos al login
-        router.push('/admin/login');
+        // Limpiamos la información guardada y redirigimos
+        localStorage.removeItem("adminUser");
+        router.push("/admin/login");
       } else {
-        console.error('Error en logout');
+        console.error("Error en logout");
       }
     } catch (error) {
-      console.error('Error en logout:', error);
+      console.error("Error en logout:", error);
     }
   }
 
