@@ -1,7 +1,3 @@
-if (process.env.NODE_ENV === 'development') global.prisma = prisma
-
-export default prisma
-
 // src/app/lib/jwt.js
 import jwt from 'jsonwebtoken'
 
