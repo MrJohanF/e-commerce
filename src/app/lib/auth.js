@@ -1,7 +1,7 @@
 // src\app\lib\auth.js
 
 import { headers } from 'next/headers'
-import { verifyToken } from './jwt'
+import { verifyToken } from './jose'
 
 export async function getSession() {
   const headersList = headers()

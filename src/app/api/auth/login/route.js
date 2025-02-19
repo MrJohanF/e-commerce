@@ -1,59 +1,44 @@
-//src\app\api\auth\login\route.js
+// src/app/api/auth/login/route.js
+import { NextResponse } from 'next/server';
+import { z } from 'zod';
 
-import { NextResponse } from 'next/server'
-import bcrypt from 'bcryptjs'
-import prisma from '@/app/lib/prisma'
-import { signToken } from '@/app/lib/jwt'
-import { z } from 'zod'
+// IMPORTA signToken (asíncrono)
+import { signToken } from '@/app/lib/jose';
 
 const loginSchema = z.object({
   email: z.string().email(),
   password: z.string(),
-})
+});
 
 export async function POST(request) {
   try {
-    const body = await request.json()
-    const { email, password } = loginSchema.parse(body)
+    const { email, password } = loginSchema.parse(await request.json());
+    // ... busca el user, valida password ...
 
-    // Buscar usuario
-    const user = await prisma.user.findUnique({
-      where: { email }
-    })
+    // FIRMAR el token con jose
+    const token = await signToken({ userId: user.id, role: user.role });
 
-    if (!user) {
-      return NextResponse.json(
-        { error: 'Credenciales inválidas' },
-        { status: 401 }
-      )
-    }
-
-    // Verificar contraseña
-    const passwordMatch = await bcrypt.compare(password, user.password)
-    if (!passwordMatch) {
-      return NextResponse.json(
-        { error: 'Credenciales inválidas' },
-        { status: 401 }
-      )
-    }
-
-    // Generar token
-    const token = signToken({ userId: user.id, role: user.role })
-
-    return NextResponse.json({
+    // Crear respuesta JSON
+    const response = NextResponse.json({
       user: {
         id: user.id,
         email: user.email,
         name: user.name,
         role: user.role,
       },
-      token,
-    })
+    });
+
+    // Setear la cookie con el token
+    response.cookies.set('adminToken', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax', // o 'strict', según prefieras
+      maxAge: 60 * 60 * 24,
+      path: '/',
+    });
+
+    return response;
   } catch (error) {
-    console.error('Error en login:', error)
-    return NextResponse.json(
-      { error: 'Error al iniciar sesión' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Error al iniciar sesión' }, { status: 500 });
   }
 }

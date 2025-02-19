@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 import prisma from '@/app/lib/prisma'
-import { signToken } from '@/app/lib/jwt'
+import { signToken } from '@/app/lib/jose'
 import { z } from 'zod'
 
 const registerSchema = z.object({
