@@ -1,3 +1,4 @@
+// src\app\lib\auth.js
 
 import { headers } from 'next/headers'
 import { verifyToken } from './jwt'
