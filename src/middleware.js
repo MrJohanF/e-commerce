@@ -20,6 +20,8 @@ export async function middleware(request) {
     }
 
     // Importante: 'verifyToken' es asíncrono
+    console.log('Middleware => JOSE_SECRET:', process.env.JWT_SECRET);
+
     const payload = await verifyToken(token);
     console.log('Middleware => Payload:', payload);
 

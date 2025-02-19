@@ -2,19 +2,24 @@
 import { SignJWT, jwtVerify } from 'jose';
 
 // Puedes cambiar el valor por process.env.JWT_SECRET si lo prefieres.
-const JWT_SECRET = process.env.JWT_SECRET || 'clave-super-secreta';
+const JWT_SECRET = process.env.JWT_SECRET || 'adminsecretkeyadminsecretkeyadmin12';
 
 // Función para firmar el token
 export async function signToken(payload) {
-  // `jose` requiere un Uint8Array como secreto
-  const secret = new TextEncoder().encode(JWT_SECRET);
-
-  // Creamos el JWT con HS256 y expiración en 24 horas
-  return await new SignJWT(payload)
-    .setProtectedHeader({ alg: 'HS256' })
-    .setExpirationTime('24h')
-    .sign(secret);
+  try {
+    const secret = new TextEncoder().encode(JWT_SECRET);
+    // Agregamos .setIssuedAt() para incluir la fecha de emisión
+    return await new SignJWT(payload)
+      .setProtectedHeader({ alg: 'HS256' })
+      .setIssuedAt()
+      .setExpirationTime('24h')
+      .sign(secret);
+  } catch (error) {
+    console.error('Error en signToken:', error);
+    throw error; // relanza el error para que el endpoint lo capture
+  }
 }
+
 
 // Función para verificar el token
 export async function verifyToken(token) {
