@@ -30,15 +30,16 @@ export default function Header() {
 
     const loadCartCount = () => {
       const cart = JSON.parse(localStorage.getItem("cart")) || [];
-      setCartCount(cart.length);
-      prevCartCountRef.current = cart.length;
+      setCartCount(cart[0]?.quantity || 0);
+      prevCartCountRef.current = cart[0]?.quantity || 0;
+      //console.log("Cart count loaded:", cart[0].quantity);
     };
     loadCartCount();
 
     const handleCartUpdated = () => {
       const cart = JSON.parse(localStorage.getItem("cart")) || [];
       
-      if (cart.length > prevCartCountRef.current) {
+      if (cart[0].quantity > prevCartCountRef.current) {
         // Trigger both counter and icon animations
         setIsCartAnimating(true);
         setIsIconAnimating(true);
@@ -50,8 +51,8 @@ export default function Header() {
         setTimeout(() => setIsIconAnimating(false), 1000);
       }
       
-      setCartCount(cart.length);
-      prevCartCountRef.current = cart.length;
+      setCartCount(cart[0]?.quantity || 0);
+      prevCartCountRef.current = cart[0]?.quantity || 0;
     };
 
     window.addEventListener("cart-updated", handleCartUpdated);
