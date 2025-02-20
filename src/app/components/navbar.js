@@ -61,7 +61,7 @@ const Navbar = ({ onViewChange, activeView }) => {
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
               <ShoppingCart className="h-8 w-8 text-purple-600" />
-              <span className="ml-2 text-xl font-bold text-gray-900">InvSystem</span>
+              <span className="ml-2 text-xl font-bold text-gray-900">Tienda Ucompensar</span>
             </div>
             
             {/* Desktop Navigation */}
