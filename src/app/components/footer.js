@@ -14,7 +14,7 @@ const Footer = () => {
     },
     {
       title: 'Soporte',
-      links: ['Centro de ayuda', 'Contacto con nosotros', 'Devoluciones', 'Garantía'],
+      links: ['contactanos', 'Contacto con nosotros', 'Devoluciones', 'Garantía'],
     },
     {
       title: 'Legal',
@@ -32,7 +32,7 @@ const Footer = () => {
               <ul className="space-y-2">
                 {section.links.map((link) => (
                   <li key={link}>
-                    <Link href="#" className="hover:text-purple-400 transition-colors">
+                    <Link href={`/${link}`} className="hover:text-purple-400 transition-colors">
                       {link}
                     </Link>
                   </li>

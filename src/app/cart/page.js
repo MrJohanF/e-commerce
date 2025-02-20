@@ -292,10 +292,10 @@ export default function CartPage() {
                     <div className="mt-6 text-center">
                       <p className="text-sm text-gray-600 mb-2">Métodos de pago aceptados</p>
                       <div className="flex justify-center space-x-2">
-                        <span className="px-2 py-1 bg-gray-50 border border-gray-200 rounded text-xs">Visa</span>
-                        <span className="px-2 py-1 bg-gray-50 border border-gray-200 rounded text-xs">Mastercard</span>
-                        <span className="px-2 py-1 bg-gray-50 border border-gray-200 rounded text-xs">PayPal</span>
-                        <span className="px-2 py-1 bg-gray-50 border border-gray-200 rounded text-xs">Apple Pay</span>
+                        <span className="text-sky-600 px-2 py-1 bg-gray-50 border border-sky-600 rounded text-xs">Visa</span>
+                        <span className="text-orange-600 px-2 py-1 bg-gray-50 border border-orange-600 rounded text-xs">Mastercard</span>
+                        <span className="text-blue-700 px-2 py-1 bg-gray-50 border border-blue-700 rounded text-xs">PayPal</span>
+                        <span className="text-slate-600 px-2 py-1 bg-gray-50 border border-slate-600 rounded text-xs">Apple Pay</span>
                       </div>
                     </div>
                   </div>
