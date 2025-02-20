@@ -1,5 +1,3 @@
-// src\app\admin\products\edit-product\[id]\page.js
-
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -14,7 +12,6 @@ import {
   Camera,
   DollarSign,
   Package,
-  Clipboard,
   Tag,
   Layers
 } from "lucide-react";
@@ -24,9 +21,9 @@ const EditProductPage = () => {
   const { id } = useParams();
   const [formData, setFormData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [isSaving, setIsSaving] = useState(false);
   const [activeTab, setActiveTab] = useState("basic");
 
   // Fetch product details on mount
@@ -52,7 +49,6 @@ const EditProductPage = () => {
 
   const handleChange = (e) => {
     const { name, value, type } = e.target;
-    // Convert to number for numeric fields
     const processedValue = type === 'number' ? parseFloat(value) : value;
     setFormData((prev) => ({
       ...prev,
@@ -68,9 +64,7 @@ const EditProductPage = () => {
     try {
       const res = await fetch(`/api/products/${id}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
       if (!res.ok) {
@@ -78,7 +72,6 @@ const EditProductPage = () => {
         throw new Error(errorData.error || "Error actualizando el producto");
       }
       setSuccess("¡Producto actualizado exitosamente!");
-      // Keep success visible for a moment
       setTimeout(() => {
         router.push("/admin/dashboard");
       }, 1500);
@@ -89,7 +82,6 @@ const EditProductPage = () => {
     }
   };
 
-  // Loading state with animation
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
@@ -104,7 +96,6 @@ const EditProductPage = () => {
     );
   }
 
-  // Product not found state
   if (!formData) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
@@ -129,7 +120,7 @@ const EditProductPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-8 px-4">
       <div className="max-w-6xl mx-auto">
-        {/* Header with back button */}
+        {/* Header with Back Button */}
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
             Editar Producto
@@ -143,9 +134,8 @@ const EditProductPage = () => {
           </Link>
         </div>
 
-        {/* Main content card with tabs */}
+        {/* Content Card with Tabs */}
         <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-2xl">
-          {/* Status Messages */}
           {error && (
             <div className="mx-6 mt-6 flex items-center gap-3 bg-red-50 border-l-4 border-red-500 p-4 rounded-lg animate-fadeIn">
               <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0" />
@@ -160,23 +150,20 @@ const EditProductPage = () => {
             </div>
           )}
 
-          {/* Navigation Tabs */}
+          {/* Navigation Tabs: Basic & Media */}
           <div className="flex overflow-x-auto border-b bg-gray-50/50 mt-4">
             {[
               { id: "basic", label: "Información Básica", icon: Package },
-              { id: "details", label: "Detalles", icon: Clipboard },
               { id: "media", label: "Multimedia", icon: Camera }
             ].map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-6 py-4 text-sm font-medium transition-all duration-300
-                  ${
-                    activeTab === tab.id
-                      ? "text-purple-600 border-b-2 border-purple-500 bg-white"
-                      : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
-                  }
-                `}
+                className={`flex items-center gap-2 px-6 py-4 text-sm font-medium transition-all duration-300 ${
+                  activeTab === tab.id
+                    ? "text-purple-600 border-b-2 border-purple-500 bg-white"
+                    : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+                }`}
               >
                 <tab.icon className={`h-4 w-4 ${activeTab === tab.id ? "text-purple-600" : "text-gray-400"}`} />
                 {tab.label}
@@ -185,245 +172,164 @@ const EditProductPage = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="p-6">
-            {/* Basic Info Tab */}
-            <div
-              className={`space-y-6 transition-all duration-500 transform
-              ${
-                activeTab === "basic"
-                  ? "translate-x-0 opacity-100"
-                  : "translate-x-full opacity-0 hidden"
-              }`}
-            >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="col-span-1 md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Nombre del Producto
-                  </label>
-                  <div className="relative group">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Tag className="h-5 w-5 text-gray-400 group-hover:text-purple-500 transition-colors duration-300" />
+            {/* Basic Tab */}
+            {activeTab === "basic" && (
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="col-span-1 md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Nombre del Producto
+                    </label>
+                    <div className="relative group">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Tag className="h-5 w-5 text-gray-400 group-hover:text-purple-500 transition-colors duration-300" />
+                      </div>
+                      <input
+                        type="text"
+                        name="name"
+                        value={formData.name || ""}
+                        onChange={handleChange}
+                        required
+                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-300"
+                        placeholder="Ej: Smartphone Galaxy S21"
+                      />
                     </div>
-                    <input
-                      type="text"
-                      name="name"
-                      value={formData.name || ""}
-                      onChange={handleChange}
-                      required
-                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-300"
-                      placeholder="Ej: Smartphone Galaxy S21"
-                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Categoría
+                    </label>
+                    <div className="relative group">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Layers className="h-5 w-5 text-gray-400 group-hover:text-purple-500 transition-colors duration-300" />
+                      </div>
+                      <select
+                        name="category"
+                        value={formData.category || ""}
+                        onChange={handleChange}
+                        required
+                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-300 appearance-none bg-white"
+                      >
+                        <option value="">Seleccionar categoría</option>
+                        <option value="smartphone">Smartphone</option>
+                        <option value="laptop">Laptop</option>
+                        <option value="tablet">Tablet</option>
+                        <option value="accessories">Accesorios</option>
+                        <option value="audio">Audio</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Precio (MXN)
+                    </label>
+                    <div className="relative group">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <DollarSign className="h-5 w-5 text-gray-400 group-hover:text-purple-500 transition-colors duration-300" />
+                      </div>
+                      <input
+                        type="number"
+                        name="price"
+                        value={formData.price || 0}
+                        onChange={handleChange}
+                        required
+                        min="0"
+                        step="0.01"
+                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-300"
+                        placeholder="0.00"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Inventario
+                    </label>
+                    <div className="relative group">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Package className="h-5 w-5 text-gray-400 group-hover:text-purple-500 transition-colors duration-300" />
+                      </div>
+                      <input
+                        type="number"
+                        name="stock"
+                        value={formData.stock || 0}
+                        onChange={handleChange}
+                        required
+                        min="0"
+                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-300"
+                        placeholder="0"
+                      />
+                    </div>
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Categoría
+                    Descripción del Producto
                   </label>
-                  <div className="relative group">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Layers className="h-5 w-5 text-gray-400 group-hover:text-purple-500 transition-colors duration-300" />
-                    </div>
-                    <select
-                      name="category"
-                      value={formData.category || ""}
-                      onChange={handleChange}
-                      required
-                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-300 appearance-none bg-white"
-                    >
-                      <option value="">Seleccionar categoría</option>
-                      <option value="smartphone">Smartphone</option>
-                      <option value="laptop">Laptop</option>
-                      <option value="tablet">Tablet</option>
-                      <option value="accessories">Accesorios</option>
-                      <option value="audio">Audio</option>
-                    </select>
-                    <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                      <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Precio (MXN)
-                  </label>
-                  <div className="relative group">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <DollarSign className="h-5 w-5 text-gray-400 group-hover:text-purple-500 transition-colors duration-300" />
-                    </div>
-                    <input
-                      type="number"
-                      name="price"
-                      value={formData.price || 0}
-                      onChange={handleChange}
-                      required
-                      min="0"
-                      step="0.01"
-                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-300"
-                      placeholder="0.00"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Inventario
-                  </label>
-                  <div className="relative group">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Package className="h-5 w-5 text-gray-400 group-hover:text-purple-500 transition-colors duration-300" />
-                    </div>
-                    <input
-                      type="number"
-                      name="stock"
-                      value={formData.stock || 0}
-                      onChange={handleChange}
-                      required
-                      min="0"
-                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-300"
-                      placeholder="0"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Details Tab */}
-            <div
-              className={`space-y-6 transition-all duration-500 transform
-              ${
-                activeTab === "details"
-                  ? "translate-x-0 opacity-100"
-                  : "translate-x-full opacity-0 hidden"
-              }`}
-            >
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Descripción del Producto
-                </label>
-                <textarea
-                  name="description"
-                  value={formData.description || ""}
-                  onChange={handleChange}
-                  rows="6"
-                  className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-300 resize-none"
-                  placeholder="Describe detalladamente el producto para tus clientes..."
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Marca
-                  </label>
-                  <input
-                    type="text"
-                    name="brand"
-                    value={formData.brand || ""}
+                  <textarea
+                    name="description"
+                    value={formData.description || ""}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-300"
-                    placeholder="Ej: Samsung, Apple, etc."
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Modelo
-                  </label>
-                  <input
-                    type="text"
-                    name="model"
-                    value={formData.model || ""}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-300"
-                    placeholder="Ej: iPhone 14 Pro, Galaxy S21"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Color
-                  </label>
-                  <input
-                    type="text"
-                    name="color"
-                    value={formData.color || ""}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-300"
-                    placeholder="Ej: Negro, Blanco, Azul"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Garantía
-                  </label>
-                  <input
-                    type="text"
-                    name="warranty"
-                    value={formData.warranty || ""}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-300"
-                    placeholder="Ej: 12 meses, 2 años"
+                    rows="6"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-300 resize-none"
+                    placeholder="Describe detalladamente el producto..."
                   />
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Media Tab */}
-            <div
-              className={`space-y-6 transition-all duration-500 transform
-              ${
-                activeTab === "media"
-                  ? "translate-x-0 opacity-100"
-                  : "translate-x-full opacity-0 hidden"
-              }`}
-            >
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  URL de la Imagen
-                </label>
-                <div className="relative group">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Camera className="h-5 w-5 text-gray-400 group-hover:text-purple-500 transition-colors duration-300" />
-                  </div>
-                  <input
-                    type="url"
-                    name="imageUrl"
-                    value={formData.imageUrl || ""}
-                    onChange={handleChange}
-                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-300"
-                    placeholder="https://ejemplo.com/imagen.jpg"
-                  />
-                </div>
-              </div>
-
-              {formData.imageUrl && (
-                <div className="mt-4 animate-fadeIn">
-                  <p className="text-sm font-medium text-gray-700 mb-2">
-                    Vista Previa:
-                  </p>
-                  <div className="group relative w-full h-72 bg-gray-50 rounded-xl overflow-hidden border-2 border-dashed border-gray-200 flex items-center justify-center">
-                    <img
-                      src={formData.imageUrl}
-                      alt="Product preview"
-                      className="w-full h-full object-contain transform transition-all duration-500 group-hover:scale-105"
+            {activeTab === "media" && (
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    URL de la Imagen
+                  </label>
+                  <div className="relative group">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <Camera className="h-5 w-5 text-gray-400 group-hover:text-purple-500 transition-colors duration-300" />
+                    </div>
+                    <input
+                      type="url"
+                      name="imageUrl"
+                      id="imageUrlInput"
+                      value={formData.imageUrl || ""}
+                      onChange={handleChange}
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-300"
+                      placeholder="https://ejemplo.com/imagen.jpg"
                     />
-                    {/* Overlay with edit button */}
-                    <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <button
-                        type="button"
-                        className="bg-white text-purple-700 px-4 py-2 rounded-lg hover:bg-purple-50 transition-colors duration-300 transform hover:scale-105"
-                        onClick={() => document.getElementById('imageUrlInput').focus()}
-                      >
-                        Cambiar Imagen
-                      </button>
+                  </div>
+                </div>
+
+                {formData.imageUrl && (
+                  <div className="mt-4 animate-fadeIn">
+                    <p className="text-sm font-medium text-gray-700 mb-2">
+                      Vista Previa:
+                    </p>
+                    <div className="group relative w-full h-72 bg-gray-50 rounded-xl overflow-hidden border-2 border-dashed border-gray-200 flex items-center justify-center">
+                      <img
+                        src={formData.imageUrl}
+                        alt="Product preview"
+                        className="w-full h-full object-contain transform transition-all duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <button
+                          type="button"
+                          className="bg-white text-purple-700 px-4 py-2 rounded-lg hover:bg-purple-50 transition-colors duration-300 transform hover:scale-105"
+                          onClick={() => document.getElementById('imageUrlInput').focus()}
+                        >
+                          Cambiar Imagen
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
+            )}
 
-            {/* Submit and Cancel Buttons */}
             <div className="flex items-center justify-between pt-8 mt-8 border-t border-gray-200">
               <Link 
                 href="/admin/dashboard"
@@ -454,7 +360,6 @@ const EditProductPage = () => {
         </div>
       </div>
 
-      {/* Custom Animations CSS */}
       <style jsx global>{`
         @keyframes fadeIn {
           from { opacity: 0; }
