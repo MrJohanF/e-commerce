@@ -69,7 +69,7 @@ const ProductsList = () => {
               <input
                 type="text"
                 placeholder="Buscar productos..."
-                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="text-gray-700 w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               />
             </div>
             <div className="flex gap-2">
