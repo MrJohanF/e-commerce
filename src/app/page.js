@@ -109,7 +109,7 @@ const ProductCarousel = () => {
                         <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                           {/* Link to the dedicated product detail page */}
                           <Link
-                            href={`/products/${product.id}`}
+                            href={`/productos/${product.id}`}
                             className="px-8 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-full font-medium transition-colors inline-flex items-center justify-center"
                           >
                             Ver detalles
