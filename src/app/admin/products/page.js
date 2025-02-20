@@ -449,12 +449,12 @@ const AddProductDashboard = () => {
                       className={`relative w-full h-64 bg-gray-50 rounded-xl overflow-hidden
                       border-2 border-dashed border-gray-200`}
                     >
-                      <img
-                        src="/api/placeholder/400/320"
-                        alt="Product preview"
-                        className={`w-full h-full object-contain transform transition-all duration-500
-                          hover:scale-105`}
-                      />
+<img
+  src={formData.imageUrl}
+  alt="Product preview"
+  className="w-full h-full object-contain transform transition-all duration-500 hover:scale-105"
+/>
+
                     </div>
                   </div>
                 )}
