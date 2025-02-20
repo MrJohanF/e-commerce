@@ -20,6 +20,7 @@ export default function CartPage() {
   // State for cart items and loading
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [initialized, setInitialized] = useState(false);
 
   // On mount, read the cart from localStorage
   useEffect(() => {
@@ -30,6 +31,7 @@ export default function CartPage() {
       console.error("Error reading cart:", error);
     }
     setLoading(false);
+    setInitialized(true); // We've now done our initial load
   }, []);
 
   // Calculate cart totals
@@ -61,8 +63,10 @@ export default function CartPage() {
 
   // Update localStorage whenever cartItems changes
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cartItems));
-  }, [cartItems]);
+    if (initialized) {
+      localStorage.setItem("cart", JSON.stringify(cartItems));
+    }
+  }, [cartItems, initialized]);
 
   // Render fallback image component
   const ImageWithFallback = ({ src, alt, className }) => {

@@ -41,17 +41,27 @@ export default function ProductsPage() {
   const handleAddToCart = (product) => {
     try {
       let currentCart = JSON.parse(localStorage.getItem("cart")) || [];
-      currentCart.push({ ...product, quantity: 1 });
+  
+      // Attempt to find an existing item with the same id
+      const existingIndex = currentCart.findIndex((item) => item.id === product.id);
+  
+      if (existingIndex >= 0) {
+        // If the item is already in the cart, just increment its quantity
+        currentCart[existingIndex].quantity = (currentCart[existingIndex].quantity || 1) + 1;
+      } else {
+        // Otherwise, push a new entry with quantity = 1
+        currentCart.push({ ...product, quantity: 1 });
+      }
+  
       localStorage.setItem("cart", JSON.stringify(currentCart));
-  
-      // Dispatch an event to let the Header know the cart changed
       window.dispatchEvent(new Event("cart-updated"));
+      //alert(`¡${product.name} se ha agregado al carrito!`);
   
-      alert(`¡${product.name} ha sido agregado al carrito!`);
     } catch (err) {
       console.error("Error adding item to cart:", err);
     }
   };
+  
   
 
   return (

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -18,33 +18,44 @@ export default function Header() {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [cartCount, setCartCount] = useState(0);
+  const [isCartAnimating, setIsCartAnimating] = useState(false);
+  const [isIconAnimating, setIsIconAnimating] = useState(false);
+  const prevCartCountRef = useRef(0);
 
-  // Loads the cart count once on mount, and sets up a listener for changes
   useEffect(() => {
-    // Load user
     const adminUser = localStorage.getItem("adminUser");
     if (adminUser) {
       setUser(JSON.parse(adminUser));
     }
 
-    // Load initial cart count
     const loadCartCount = () => {
       const cart = JSON.parse(localStorage.getItem("cart")) || [];
       setCartCount(cart.length);
+      prevCartCountRef.current = cart.length;
     };
     loadCartCount();
 
-    // Define event handler
     const handleCartUpdated = () => {
-      // Re-check localStorage to get updated cart size
       const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      
+      if (cart.length > prevCartCountRef.current) {
+        // Trigger both counter and icon animations
+        setIsCartAnimating(true);
+        setIsIconAnimating(true);
+        
+        // Reset counter animation
+        setTimeout(() => setIsCartAnimating(false), 800);
+        
+        // Reset icon animation slightly later
+        setTimeout(() => setIsIconAnimating(false), 1000);
+      }
+      
       setCartCount(cart.length);
+      prevCartCountRef.current = cart.length;
     };
 
-    // Listen for the "cart-updated" event
     window.addEventListener("cart-updated", handleCartUpdated);
 
-    // Cleanup event listener on unmount
     return () => {
       window.removeEventListener("cart-updated", handleCartUpdated);
     };
@@ -68,6 +79,7 @@ export default function Header() {
 
   return (
     <header className="fixed w-full bg-white/80 backdrop-blur-md z-50 border-b border-gray-100">
+      {/* Rest of the header content remains the same until the cart icon */}
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <Link
@@ -77,7 +89,6 @@ export default function Header() {
             Tienda Ucompensar
           </Link>
 
-          {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8">
             {navigationLinks.map((item) => (
               <Link
@@ -91,16 +102,42 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center space-x-4">
-            {/* Cart Icon + Count */}
-            <Link href="/cart" className="relative p-2 hover:bg-gray-100 rounded-full transition-colors">
-              <ShoppingCart className="w-6 h-6 text-gray-600" />
+            {/* Enhanced Cart Icon Animation */}
+            <Link 
+              href="/cart" 
+              prefetch={false}
+              className={`relative p-2 rounded-full transition-all duration-300 ${
+                isIconAnimating ? 'bg-purple-100' : 'hover:bg-gray-100'
+              }`}
+            >
+              <ShoppingCart 
+                className={`w-6 h-6 transition-all duration-300 transform ${
+                  isIconAnimating 
+                    ? 'text-purple-600 scale-110 rotate-12' 
+                    : 'text-gray-600'
+                }`}
+              />
               {cartCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 bg-red-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                <span 
+                  className={`
+                    absolute -top-1.5 -right-1.5 
+                    bg-red-600 text-white text-xs 
+                    w-5 h-5 rounded-full 
+                    flex items-center justify-center 
+                    transition-all duration-800 
+                    ${isCartAnimating ? [
+                      'animate-[bounce_0.5s_cubic-bezier(0.36,0,0.66,-0.56)_2]',
+                      'bg-purple-600 scale-150',
+                      'ring-4 ring-purple-200'
+                    ].join(' ') : 'scale-100'}
+                  `}
+                >
                   {cartCount}
                 </span>
               )}
             </Link>
 
+            {/* Rest of the component remains the same */}
             {/* User Menu */}
             {user ? (
               <div className="relative">
