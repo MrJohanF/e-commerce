@@ -11,6 +11,7 @@ import {
   Heart 
 } from "lucide-react";
 import Header from "../components/header";
+import Footer from "../components/footer";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]); // Will store real product data
@@ -258,13 +259,7 @@ export default function ProductsPage() {
         </section>
       </main>
 
-      <footer className="bg-gray-900 text-gray-400">
-        <div className="container mx-auto px-4 py-12">
-          <div className="border-t border-gray-800 pt-8 text-center">
-            <p>&copy; {new Date().getFullYear()} Tienda Virtual. Todos los derechos reservados.</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

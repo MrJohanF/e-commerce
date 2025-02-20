@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   Menu,
@@ -10,15 +10,16 @@ import {
   Plus,
   Settings,
   ChevronDown,
-  ShoppingCart
-} from 'lucide-react';
+  ShoppingCart,
+  House,
+} from "lucide-react";
 
 const Navbar = ({ onViewChange, activeView }) => {
   const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
- 
+
   async function handleLogout() {
     try {
       const res = await fetch("/api/auth/logout", {
@@ -44,8 +45,8 @@ const Navbar = ({ onViewChange, activeView }) => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleNavClick = (view) => {
@@ -61,34 +62,37 @@ const Navbar = ({ onViewChange, activeView }) => {
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
               <ShoppingCart className="h-8 w-8 text-purple-600" />
-              <span className="ml-2 text-xl font-bold text-gray-900">Tienda Ucompensar</span>
+              <span className="ml-2 text-xl font-bold text-gray-900">
+                Tienda Ucompensar
+              </span>
             </div>
-            
+
             {/* Desktop Navigation */}
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
               <button
-                onClick={() => handleNavClick('products')}
+                onClick={() => handleNavClick("products")}
                 className={`flex items-center px-3 py-2 text-sm font-medium transition-colors
-                  ${activeView === 'products' 
-                    ? 'text-purple-600 border-b-2 border-purple-500' 
-                    : 'text-gray-900 hover:text-purple-600'
+                  ${
+                    activeView === "products"
+                      ? "text-purple-600 border-b-2 border-purple-500"
+                      : "text-gray-900 hover:text-purple-600"
                   }`}
               >
                 <Package className="h-4 w-4 mr-2" />
                 Productos
               </button>
               <button
-                onClick={() => handleNavClick('add-product')}
+                onClick={() => handleNavClick("add-product")}
                 className={`flex items-center px-3 py-2 text-sm font-medium transition-colors
-                  ${activeView === 'add-product' 
-                    ? 'text-purple-600 border-b-2 border-purple-500' 
-                    : 'text-gray-900 hover:text-purple-600'
+                  ${
+                    activeView === "add-product"
+                      ? "text-purple-600 border-b-2 border-purple-500"
+                      : "text-gray-900 hover:text-purple-600"
                   }`}
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Agregar Producto
               </button>
-              
             </div>
           </div>
 
@@ -102,7 +106,11 @@ const Navbar = ({ onViewChange, activeView }) => {
               >
                 <User className="h-4 w-4 mr-2" />
                 <span>Mi Cuenta</span>
-                <ChevronDown className={`h-4 w-4 ml-2 transform transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown
+                  className={`h-4 w-4 ml-2 transform transition-transform ${
+                    isDropdownOpen ? "rotate-180" : ""
+                  }`}
+                />
               </button>
 
               {/* Dropdown Menu */}
@@ -112,7 +120,15 @@ const Navbar = ({ onViewChange, activeView }) => {
                     Mi Cuenta
                   </div>
                   <button
-                    onClick={() => handleNavClick('settings')}
+                    onClick={() => router.push("/")} 
+                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                  >
+                    <House className="h-4 w-4 mr-2" />
+                    <span>Inicio</span>
+                  </button>
+
+                  <button
+                    onClick={() => handleNavClick("settings")}
                     className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                   >
                     <Settings className="h-4 w-4 mr-2" />
@@ -146,22 +162,24 @@ const Navbar = ({ onViewChange, activeView }) => {
           <div className="sm:hidden pb-3 pt-2">
             <div className="space-y-1">
               <button
-                onClick={() => handleNavClick('products')}
+                onClick={() => handleNavClick("products")}
                 className={`flex items-center w-full px-3 py-2 text-base font-medium 
-                  ${activeView === 'products'
-                    ? 'text-purple-600 bg-purple-50'
-                    : 'text-gray-900 hover:text-purple-600 hover:bg-purple-50'
+                  ${
+                    activeView === "products"
+                      ? "text-purple-600 bg-purple-50"
+                      : "text-gray-900 hover:text-purple-600 hover:bg-purple-50"
                   } rounded-md transition-colors`}
               >
                 <Package className="h-5 w-5 mr-3" />
                 Productos
               </button>
               <button
-                onClick={() => handleNavClick('add-product')}
+                onClick={() => handleNavClick("add-product")}
                 className={`flex items-center w-full px-3 py-2 text-base font-medium
-                  ${activeView === 'add-product'
-                    ? 'text-purple-600 bg-purple-50'
-                    : 'text-gray-900 hover:text-purple-600 hover:bg-purple-50'
+                  ${
+                    activeView === "add-product"
+                      ? "text-purple-600 bg-purple-50"
+                      : "text-gray-900 hover:text-purple-600 hover:bg-purple-50"
                   } rounded-md transition-colors`}
               >
                 <Plus className="h-5 w-5 mr-3" />
