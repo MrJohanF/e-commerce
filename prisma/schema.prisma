@@ -4,6 +4,8 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+// prisma\schema.prisma
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -24,6 +26,25 @@ model User {
 
   @@index([email])
 }
+
+model Product {
+  id             Int      @id @default(autoincrement())
+  name           String
+  category       String
+  price          Float
+  stock          Int
+  description    String?
+  specifications Json?    //  Array de objetos (por ejemplo: [{ key: "", value: "" }])
+  brand          String?
+  model          String?
+  color          String?
+  warranty       String?
+  imageUrl       String?
+  features       Json?    // Para almacenar un array de strings, por ejemplo: ["Característica 1", "Característica 2"]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
 
 enum Role {
   USER
