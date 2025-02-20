@@ -2,7 +2,7 @@
 
 "use client"; // 1. Import the client-side runtime
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   ShoppingCart,
@@ -24,40 +24,26 @@ import HeroSection from "./components/hero.js";
 import FeaturesSection from "./components/features.js";
 import Footer from "./components/footer.js";
 
-
 const ProductCarousel = () => {
   const [activeSlide, setActiveSlide] = React.useState(0);
+  const [products, setProducts] = useState([]);
 
-  const products = [
-    {
-      id: 1,
-      name: "Smart Watch Pro",
-      price: "$299",
-      description: "Advanced fitness tracking and health monitoring",
-      icon: <Watch className="w-8 h-8" />,
-    },
-    {
-      id: 2,
-      name: "Ultra Book X1",
-      price: "$1299",
-      description: "Powerful laptop for professionals",
-      icon: <Laptop className="w-8 h-8" />,
-    },
-    {
-      id: 3,
-      name: "Premium Headphones",
-      price: "$199",
-      description: "Immersive audio experience",
-      icon: <Headphones className="w-8 h-8" />,
-    },
-    {
-      id: 4,
-      name: "Smart Phone 13",
-      price: "$899",
-      description: "Next-generation mobile technology",
-      icon: <Smartphone className="w-8 h-8" />,
-    },
-  ];
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch("/api/products");
+      if (!res.ok) {
+        throw new Error("Error fetching products");
+      }
+      const data = await res.json();
+      setProducts(data);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   const nextSlide = () => {
     setActiveSlide((prev) => (prev + 1) % products.length);
@@ -99,8 +85,12 @@ const ProductCarousel = () => {
                   <div className="bg-white rounded-2xl p-8 shadow-lg">
                     <div className="flex flex-col md:flex-row items-center gap-8">
                       <div className="w-full md:w-1/2">
-                        <div className="aspect-square bg-purple-100 rounded-xl flex items-center justify-center p-8">
-                          {product.icon}
+                        <div className="aspect-square bg-white rounded-xl flex items-center justify-center p-8">
+                          <img
+                            src={product.imageUrl}
+                            alt={product.name}
+                            className="h-full w-full object-contain"
+                          />
                         </div>
                       </div>
                       <div className="w-full md:w-1/2 text-center md:text-left">
@@ -184,8 +174,6 @@ const NewsletterSection = () => (
     </div>
   </section>
 );
-
-
 
 export default function Home() {
   return (

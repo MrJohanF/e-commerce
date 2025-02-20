@@ -17,7 +17,7 @@ import {
 import { useRouter } from "next/navigation";
 
 const ProductsList = () => {
-  const [products, setProducts] = useState([]); // Real product data
+  const [products, setProducts] = useState([]); // Stores array
   const [isDeleting, setIsDeleting] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null); // Stores entire product object
   const router = useRouter();
