@@ -40,7 +40,7 @@ export default function ContactPage() {
                 {
                   icon: <Phone className="w-6 h-6" />,
                   title: "Llámanos",
-                  info: "+57 (323) 684-4945",
+                  info: "+57 (323) 684 4945",
                   action: "Llamar ahora",
                   gradient: "from-blue-500 to-blue-600"
                 },

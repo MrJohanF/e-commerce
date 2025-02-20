@@ -20,7 +20,7 @@ const productSchema = z.object({
 
 export async function GET(request, { params }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const product = await prisma.product.findUnique({
       where: { id: Number(id) },
     });
