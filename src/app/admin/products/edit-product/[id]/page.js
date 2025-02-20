@@ -190,7 +190,7 @@ const EditProductPage = () => {
                         value={formData.name || ""}
                         onChange={handleChange}
                         required
-                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-300"
+                        className="text-gray-700  w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-300"
                         placeholder="Ej: Smartphone Galaxy S21"
                       />
                     </div>
@@ -209,14 +209,11 @@ const EditProductPage = () => {
                         value={formData.category || ""}
                         onChange={handleChange}
                         required
-                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-300 appearance-none bg-white"
+                        className="text-gray-700  w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-300 appearance-none bg-white"
                       >
                         <option value="">Seleccionar categoría</option>
                         <option value="smartphone">Smartphone</option>
                         <option value="laptop">Laptop</option>
-                        <option value="tablet">Tablet</option>
-                        <option value="accessories">Accesorios</option>
-                        <option value="audio">Audio</option>
                       </select>
                     </div>
                   </div>
@@ -237,7 +234,7 @@ const EditProductPage = () => {
                         required
                         min="0"
                         step="0.01"
-                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-300"
+                        className="text-gray-700 w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-300"
                         placeholder="0.00"
                       />
                     </div>
@@ -258,7 +255,7 @@ const EditProductPage = () => {
                         onChange={handleChange}
                         required
                         min="0"
-                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-300"
+                        className="text-gray-700 w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-300"
                         placeholder="0"
                       />
                     </div>
@@ -274,7 +271,7 @@ const EditProductPage = () => {
                     value={formData.description || ""}
                     onChange={handleChange}
                     rows="6"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-300 resize-none"
+                    className="text-gray-700 w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-300 resize-none"
                     placeholder="Describe detalladamente el producto..."
                   />
                 </div>
