@@ -57,3 +57,20 @@ export async function PUT(request, { params }) {
     return NextResponse.json({ error: "Error actualizando producto" }, { status: 500 });
   }
 }
+
+
+export async function DELETE(request, { params }) {
+  try {
+    const { id } = await params;
+    const deletedProduct = await prisma.product.delete({
+      where: { id: Number(id) },
+    });
+    return NextResponse.json(deletedProduct, { status: 200 });
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    return NextResponse.json(
+      { error: "Error deleting product" },
+      { status: 500 }
+    );
+  }
+}
