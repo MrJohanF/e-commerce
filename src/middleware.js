@@ -20,10 +20,10 @@ export async function middleware(request) {
     }
 
     // Importante: 'verifyToken' es asíncrono
-    console.log('Middleware => JOSE_SECRET:', process.env.JWT_SECRET);
+    //console.log('Middleware => JOSE_SECRET:', process.env.JWT_SECRET);
 
     const payload = await verifyToken(token);
-    console.log('Middleware => Payload:', payload);
+    //console.log('Middleware => Payload:', payload);
 
     // Si el payload es null (token inválido) o el rol no es ADMIN => redirige
     if (!payload || payload.role !== 'ADMIN') {
@@ -40,5 +40,4 @@ export async function middleware(request) {
 
 export const config = {
   matcher: ['/admin/:path*'],
-  // Nota: no pongas runtime: 'nodejs', el middleware corre en edge.
 };
