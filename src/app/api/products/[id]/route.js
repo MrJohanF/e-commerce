@@ -1,63 +1,59 @@
+// src/app/api/products/[id]/route.js
+import { NextResponse } from 'next/server';
+import prisma from '@/app/lib/prisma';
+import { z } from 'zod';
 
-const mockProducts = [
-  {
-    id: "1",
-    name: "Smart Phone 13 Pro",
-    description: "A high-end smartphone with an advanced camera system.",
-    images: ["/images/product-detail-1.png", "/images/product-detail-2.png"],
-    price: 999,
-    rating: 4.5,
-    reviewsCount: 128,
-    specs: {
-      Pantalla: "6.5” OLED",
-      Procesador: "A15 Bionic",
-      Batería: "3,500 mAh",
-      Cámara: "12MP + 12MP Tele",
-      Almacenamiento: "128 GB",
-      RAM: "6 GB",
-    },
-  },
-  {
-    id: "2",
-    name: "Ultra Book X1",
-    description: "A powerful ultrabook designed for professionals on the go.",
-    images: ["/images/laptop-1.png"],
-    price: 1299,
-    rating: 4.0,
-    reviewsCount: 54,
-    specs: {
-      Pantalla: "14” Retina",
-      Procesador: "Intel i7",
-      RAM: "16 GB",
-      Almacenamiento: "512 GB SSD",
-      Gráficos: "Intel Iris Xe",
-      Peso: "1.2 kg",
-    },
-  },
-];
+const productSchema = z.object({
+  name: z.string().min(1, "El nombre es requerido"),
+  category: z.string().min(1),
+  price: z.number().positive("El precio debe ser mayor a 0"),
+  stock: z.number().nonnegative("El stock no puede ser negativo"),
+  description: z.string().optional(),
+  specifications: z.array(z.object({ key: z.string(), value: z.string() })).optional(),
+  brand: z.string().optional(),
+  model: z.string().optional(),
+  color: z.string().optional(),
+  warranty: z.string().optional(),
+  imageUrl: z.string().url().optional(),
+  features: z.array(z.string()).optional(),
+});
 
-/**
- * Route handler for GET /api/products/[id]
- */
-export async function GET(request, context) {
-  // Await the dynamic params
-  const params = await context.params;
-
-  // Now read id
-  const { id } = params;
-
-  // Simulate a database / external API lookup
-  const product = mockProducts.find((p) => p.id === id);
-
-  if (!product) {
-    return new Response(JSON.stringify({ error: "Not found" }), {
-      status: 404,
-      headers: { "Content-Type": "application/json" },
+export async function GET(request, { params }) {
+  try {
+    const { id } = params;
+    const product = await prisma.product.findUnique({
+      where: { id: Number(id) },
     });
+    if (!product) {
+      return NextResponse.json({ error: "Producto no encontrado" }, { status: 404 });
+    }
+    return NextResponse.json(product);
+  } catch (error) {
+    console.error("Error obteniendo producto:", error);
+    return NextResponse.json({ error: "Error obteniendo producto" }, { status: 500 });
   }
+}
 
-  return new Response(JSON.stringify(product), {
-    status: 200,
-    headers: { "Content-Type": "application/json" },
-  });
+export async function PUT(request, { params }) {
+  try {
+    const { id } = params;
+    const data = await request.json();
+
+    // Asegúrate de que price y stock sean números
+    data.price = Number(data.price);
+    data.stock = Number(data.stock);
+
+    // Validar la data con Zod
+    const parsedData = productSchema.parse(data);
+
+    const updatedProduct = await prisma.product.update({
+      where: { id: Number(id) },
+      data: parsedData,
+    });
+
+    return NextResponse.json(updatedProduct);
+  } catch (error) {
+    console.error("Error actualizando producto:", error);
+    return NextResponse.json({ error: "Error actualizando producto" }, { status: 500 });
+  }
 }

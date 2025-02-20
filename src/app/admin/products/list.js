@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+"use client";
+
+import React, { useState, useEffect } from 'react';
 import {
   Edit,
   Trash2,
@@ -7,26 +9,36 @@ import {
   ArrowUpDown,
   Loader2
 } from 'lucide-react';
+import { useRouter } from "next/navigation";
 
 const ProductsList = () => {
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      name: 'iPhone 14 Pro Max',
-      category: 'smartphone',
-      price: 999.99,
-      stock: 50,
-      imageUrl: '/api/placeholder/100/100'
-    },
-    // Add more sample products as needed
-  ]);
-
+  const [products, setProducts] = useState([]); // Inicializa con un arreglo vacío
   const [isDeleting, setIsDeleting] = useState(false);
+  const router = useRouter();
+
+  // Función para obtener los productos reales desde la API
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch("/api/products");
+      if (!res.ok) {
+        throw new Error("Error fetching products");
+      }
+      const data = await res.json();
+      setProducts(data);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   const handleDelete = async (productId) => {
     setIsDeleting(true);
     try {
-      // Add your delete logic here
+      // Aquí puedes agregar la lógica de eliminación real (por ejemplo, llamar a un endpoint DELETE)
+      // Por ahora, simulamos la eliminación
       await new Promise(resolve => setTimeout(resolve, 1000));
       setProducts(products.filter(p => p.id !== productId));
     } catch (error) {
@@ -35,6 +47,8 @@ const ProductsList = () => {
       setIsDeleting(false);
     }
   };
+
+  const navigationLinks = ["Inicio", "Productos", "Nosotros"];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4 md:p-6">
@@ -92,7 +106,7 @@ const ProductsList = () => {
                 
                 <div className="mt-4 flex justify-end space-x-2">
                   <button
-                    onClick={() => window.location.href = `/edit-product/${product.id}`}
+                    onClick={() => router.push(`/edit-product/${product.id}`)}
                     className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                   >
                     <Edit className="h-5 w-5" />
