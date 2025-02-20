@@ -98,12 +98,12 @@ const AddProductDashboard = () => {
     setError("");
     setSuccess("");
     setIsSubmitted(true);
-  
+
     try {
       if (Number(formData.price) <= 0) {
         throw new Error("El precio debe ser mayor a 0");
       }
-      
+
       // Llamada real al endpoint de creación de producto
       const response = await fetch("/api/products/create", {
         method: "POST",
@@ -112,15 +112,15 @@ const AddProductDashboard = () => {
         },
         body: JSON.stringify(formData),
       });
-      
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || "Error al crear el producto");
       }
-      
+
       const data = await response.json();
       setSuccess("¡Producto agregado exitosamente!");
-      
+
       // Reinicia el formulario
       setFormData({
         name: "",
@@ -449,12 +449,11 @@ const AddProductDashboard = () => {
                       className={`relative w-full h-64 bg-gray-50 rounded-xl overflow-hidden
                       border-2 border-dashed border-gray-200`}
                     >
-<img
-  src={formData.imageUrl}
-  alt="Product preview"
-  className="w-full h-full object-contain transform transition-all duration-500 hover:scale-105"
-/>
-
+                      <img
+                        src={formData.imageUrl}
+                        alt="Product preview"
+                        className="w-full h-full object-contain transform transition-all duration-500 hover:scale-105"
+                      />
                     </div>
                   </div>
                 )}

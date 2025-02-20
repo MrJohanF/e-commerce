@@ -3,17 +3,18 @@
 import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
-import { 
-  ArrowLeft, 
-  Save, 
-  Loader2, 
+import {
+  ArrowLeft,
+  Save,
+  Loader2,
   AlertCircle,
   CheckCircle,
-  Camera,
+  ImagePlus,
   DollarSign,
   Package,
   Tag,
-  Layers
+  Layers, 
+  ChevronRight,
 } from "lucide-react";
 
 const EditProductPage = () => {
@@ -49,7 +50,7 @@ const EditProductPage = () => {
 
   const handleChange = (e) => {
     const { name, value, type } = e.target;
-    const processedValue = type === 'number' ? parseFloat(value) : value;
+    const processedValue = type === "number" ? parseFloat(value) : value;
     setFormData((prev) => ({
       ...prev,
       [name]: processedValue,
@@ -89,8 +90,12 @@ const EditProductPage = () => {
           <div className="flex justify-center mb-6">
             <Loader2 className="h-12 w-12 text-purple-600 animate-spin" />
           </div>
-          <h2 className="text-xl font-semibold text-gray-800 mb-2">Cargando producto</h2>
-          <p className="text-gray-600">Obteniendo información del producto...</p>
+          <h2 className="text-xl font-semibold text-gray-800 mb-2">
+            Cargando producto
+          </h2>
+          <p className="text-gray-600">
+            Obteniendo información del producto...
+          </p>
         </div>
       </div>
     );
@@ -103,10 +108,14 @@ const EditProductPage = () => {
           <div className="flex justify-center mb-6">
             <AlertCircle className="h-16 w-16 text-red-500" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-3">Producto no encontrado</h2>
-          <p className="text-gray-600 mb-8">No pudimos encontrar el producto que estás buscando.</p>
-          <Link 
-            href="/admin/dashboard" 
+          <h2 className="text-2xl font-bold text-gray-800 mb-3">
+            Producto no encontrado
+          </h2>
+          <p className="text-gray-600 mb-8">
+            No pudimos encontrar el producto que estás buscando.
+          </p>
+          <Link
+            href="/admin/dashboard"
             className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -125,8 +134,8 @@ const EditProductPage = () => {
           <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
             Editar Producto
           </h1>
-          <Link 
-            href="/admin/dashboard" 
+          <Link
+            href="/admin/dashboard"
             className="flex items-center gap-2 px-4 py-2 text-purple-700 bg-purple-50 rounded-lg hover:bg-purple-100 transition-all duration-300"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -154,7 +163,7 @@ const EditProductPage = () => {
           <div className="flex overflow-x-auto border-b bg-gray-50/50 mt-4">
             {[
               { id: "basic", label: "Información Básica", icon: Package },
-              { id: "media", label: "Multimedia", icon: Camera }
+              { id: "media", label: "Multimedia", icon: ImagePlus },
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -165,8 +174,20 @@ const EditProductPage = () => {
                     : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
                 }`}
               >
-                <tab.icon className={`h-4 w-4 ${activeTab === tab.id ? "text-purple-600" : "text-gray-400"}`} />
+                
+                <tab.icon
+                  className={`h-4 w-4 ${
+                    activeTab === tab.id ? "text-purple-600" : "text-gray-400"
+                  }`}
+                />
+
                 {tab.label}
+
+                <ChevronRight
+                  className={`h-4 w-4 ml-2 transition-transform duration-300
+                  ${activeTab === tab.id ? "rotate-90" : ""}`}
+                />
+
               </button>
             ))}
           </div>
@@ -287,7 +308,7 @@ const EditProductPage = () => {
                   </label>
                   <div className="relative group">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Camera className="h-5 w-5 text-gray-400 group-hover:text-purple-500 transition-colors duration-300" />
+                      <ImagePlus className="h-5 w-5 text-gray-400 group-hover:text-purple-500 transition-colors duration-300" />
                     </div>
                     <input
                       type="url"
@@ -316,7 +337,9 @@ const EditProductPage = () => {
                         <button
                           type="button"
                           className="bg-white text-purple-700 px-4 py-2 rounded-lg hover:bg-purple-50 transition-colors duration-300 transform hover:scale-105"
-                          onClick={() => document.getElementById('imageUrlInput').focus()}
+                          onClick={() =>
+                            document.getElementById("imageUrlInput").focus()
+                          }
                         >
                           Cambiar Imagen
                         </button>
@@ -328,13 +351,13 @@ const EditProductPage = () => {
             )}
 
             <div className="flex items-center justify-between pt-8 mt-8 border-t border-gray-200">
-              <Link 
+              <Link
                 href="/admin/dashboard"
                 className="inline-flex items-center px-5 py-2 border border-gray-300 text-gray-700 bg-white rounded-lg hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
               >
                 Cancelar
               </Link>
-              
+
               <button
                 type="submit"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium rounded-lg hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition-all transform hover:scale-105 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
@@ -359,10 +382,14 @@ const EditProductPage = () => {
 
       <style jsx global>{`
         @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
         }
-        
+
         .animate-fadeIn {
           animation: fadeIn 0.5s ease-out forwards;
         }
