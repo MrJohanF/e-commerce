@@ -75,9 +75,14 @@ const AdminLogin = () => {
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50 flex items-center justify-center p-4">
 
       <div className="max-w-md w-full space-y-6 bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
+      <div className="top-2 sm:top-4 left-2 sm:left-4">
+        <BackToHome />
+      </div>
         {/* Header Section */}
         <div className="text-center space-y-2">
+
           <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            
             <Lock className="w-8 h-8 text-purple-600" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900">

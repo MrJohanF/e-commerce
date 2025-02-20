@@ -24,7 +24,7 @@ const BackToHome = ({ className = '' }) => {
       <ChevronLeft 
         className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform duration-300" 
       />
-      <span>Volver al inicio</span>
+      <span>Inicio</span>
     </Link>
   );
 };
