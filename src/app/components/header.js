@@ -43,7 +43,7 @@ export default function Header() {
     }
   }
 
-  const navigationLinks = ["Inicio", "Productos", "Nosotros"];
+  const navigationLinks = ["Inicio", "Productos", "Nosotros", "Contactanos"];
 
   return (
     <header className="fixed w-full bg-white/80 backdrop-blur-md z-50 border-b border-gray-100">

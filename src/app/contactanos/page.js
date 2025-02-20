@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { Mail, Phone, MapPin, Send, MessageCircle, Clock, ArrowRight } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, MessageCircle, Clock, ArrowRight, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
 import Header from '../components/header';
 
 export default function ContactPage() {
@@ -40,14 +40,14 @@ export default function ContactPage() {
                 {
                   icon: <Phone className="w-6 h-6" />,
                   title: "Llámanos",
-                  info: "+1 (555) 123-4567",
+                  info: "+57 (323) 684-4945",
                   action: "Llamar ahora",
                   gradient: "from-blue-500 to-blue-600"
                 },
                 {
                   icon: <Mail className="w-6 h-6" />,
                   title: "Email",
-                  info: "soporte@tiendavirtual.com",
+                  info: "soporte@tiendaucompensar.com",
                   action: "Enviar email",
                   gradient: "from-indigo-500 to-indigo-600"
                 }
@@ -83,7 +83,7 @@ export default function ContactPage() {
                         <label className="text-sm font-medium text-gray-700">Nombre</label>
                         <input
                           type="text"
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all"
+                          className="text-gray-700 w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all"
                           placeholder="Tu nombre"
                           required
                         />
@@ -92,7 +92,7 @@ export default function ContactPage() {
                         <label className="text-sm font-medium text-gray-700">Apellido</label>
                         <input
                           type="text"
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all"
+                          className="text-gray-700 w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all"
                           placeholder="Tu apellido"
                           required
                         />
@@ -102,7 +102,7 @@ export default function ContactPage() {
                       <label className="text-sm font-medium text-gray-700">Email</label>
                       <input
                         type="email"
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all"
+                        className="text-gray-700 w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all"
                         placeholder="tu@email.com"
                         required
                       />
@@ -124,7 +124,7 @@ export default function ContactPage() {
                       <label className="text-sm font-medium text-gray-700">Mensaje</label>
                       <textarea
                         rows="4"
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all"
+                        className="text-gray-700 w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all"
                         placeholder="¿En qué podemos ayudarte?"
                         required
                       ></textarea>
@@ -150,7 +150,7 @@ export default function ContactPage() {
                         <h4 className="font-medium mb-1">Ubicación</h4>
                         <p className="text-gray-100">
                           Calle Principal 123<br />
-                          Ciudad, País CP 12345
+                          Bogota D.C, Colombia 12345
                         </p>
                       </div>
                     </div>
@@ -179,7 +179,12 @@ export default function ContactPage() {
                             className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors"
                           >
                             <span className="sr-only">{social}</span>
-                            {/* You can add social icons here */}
+                            {
+                              social === 'facebook' ? <Facebook className="w-5 h-5 text-white" /> :
+                              social === 'twitter' ? <Twitter className="w-5 h-5 text-white" /> :
+                              social === 'instagram' ? <Instagram className="w-5 h-5 text-white" /> :
+                              social === 'linkedin' ? <Linkedin className="w-5 h-5 text-white" /> : <Mail className="w-5 h-5 text-white" />
+                            }
                           </a>
                         ))}
                       </div>
