@@ -34,16 +34,17 @@ model Product {
   price          Float
   stock          Int
   description    String?
-  specifications Json?    //  Array de objetos (por ejemplo: [{ key: "", value: "" }])
+  specifications Json?    // Puedes almacenar un array de objetos (ej.: [{ key: "", value: "" }])
   brand          String?
   model          String?
   color          String?
   warranty       String?
   imageUrl       String?
-  features       Json?    // Para almacenar un array de strings, por ejemplo: ["Característica 1", "Característica 2"]
+  features       Json?    // Para almacenar un array de strings, ej.: ["Característica 1", "Característica 2"]
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 }
+
 
 
 enum Role {

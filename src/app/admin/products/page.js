@@ -98,13 +98,30 @@ const AddProductDashboard = () => {
     setError("");
     setSuccess("");
     setIsSubmitted(true);
-
+  
     try {
-      if (formData.price <= 0) {
+      if (Number(formData.price) <= 0) {
         throw new Error("El precio debe ser mayor a 0");
       }
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      
+      // Llamada real al endpoint de creación de producto
+      const response = await fetch("/api/products/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Error al crear el producto");
+      }
+      
+      const data = await response.json();
       setSuccess("¡Producto agregado exitosamente!");
+      
+      // Reinicia el formulario
       setFormData({
         name: "",
         category: "smartphone",
@@ -241,7 +258,7 @@ const AddProductDashboard = () => {
                     name="category"
                     value={formData.category}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 rounded-xl border border-gray-300
+                    className={`text-gray-700 w-full px-4 py-3 rounded-xl border border-gray-300
                       focus:ring-2 focus:ring-purple-500 focus:border-transparent
                       transition-all duration-300 hover:border-purple-300
                       appearance-none bg-white`}
@@ -281,7 +298,7 @@ const AddProductDashboard = () => {
                       required
                       min="0"
                       step="0.01"
-                      className={`w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300
+                      className={`text-gray-700 w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300
                         focus:ring-2 focus:ring-purple-500 focus:border-transparent
                         transition-all duration-300 hover:border-purple-300`}
                       placeholder="999.99"
@@ -301,7 +318,7 @@ const AddProductDashboard = () => {
                     onChange={handleChange}
                     required
                     min="0"
-                    className={`w-full px-4 py-3 rounded-xl border border-gray-300
+                    className={`text-gray-700 w-full px-4 py-3 rounded-xl border border-gray-300
                       focus:ring-2 focus:ring-purple-500 focus:border-transparent
                       transition-all duration-300 hover:border-purple-300`}
                     placeholder="50"
@@ -318,7 +335,7 @@ const AddProductDashboard = () => {
                     value={formData.description}
                     onChange={handleChange}
                     rows="4"
-                    className={`w-full px-4 py-3 rounded-xl border border-gray-300
+                    className={`text-gray-700 w-full px-4 py-3 rounded-xl border border-gray-300
                       focus:ring-2 focus:ring-purple-500 focus:border-transparent
                       transition-all duration-300 hover:border-purple-300
                       resize-none`}
