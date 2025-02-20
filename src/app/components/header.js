@@ -17,22 +17,43 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const [cartCount, setCartCount] = useState(0);
 
+  // Loads the cart count once on mount, and sets up a listener for changes
   useEffect(() => {
-    // Verificar si hay un usuario logueado
-    const adminUser = localStorage.getItem('adminUser');
+    // Load user
+    const adminUser = localStorage.getItem("adminUser");
     if (adminUser) {
       setUser(JSON.parse(adminUser));
     }
+
+    // Load initial cart count
+    const loadCartCount = () => {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      setCartCount(cart.length);
+    };
+    loadCartCount();
+
+    // Define event handler
+    const handleCartUpdated = () => {
+      // Re-check localStorage to get updated cart size
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      setCartCount(cart.length);
+    };
+
+    // Listen for the "cart-updated" event
+    window.addEventListener("cart-updated", handleCartUpdated);
+
+    // Cleanup event listener on unmount
+    return () => {
+      window.removeEventListener("cart-updated", handleCartUpdated);
+    };
   }, []);
 
   async function handleLogout() {
     try {
-      const res = await fetch("/api/auth/logout", {
-        method: "POST",
-      });
+      const res = await fetch("/api/auth/logout", { method: "POST" });
       if (res.ok) {
-        // Limpiamos la información guardada y redirigimos
         localStorage.removeItem("adminUser");
         router.push("/admin/login");
       } else {
@@ -70,11 +91,14 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center space-x-4">
-            <Link
-              href="/cart"
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-            >
+            {/* Cart Icon + Count */}
+            <Link href="/cart" className="relative p-2 hover:bg-gray-100 rounded-full transition-colors">
               <ShoppingCart className="w-6 h-6 text-gray-600" />
+              {cartCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 bg-red-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                  {cartCount}
+                </span>
+              )}
             </Link>
 
             {/* User Menu */}
@@ -92,11 +116,9 @@ export default function Header() {
                   </span>
                   <ChevronDown className="w-4 h-4 text-gray-500" />
                 </button>
-
-                {/* Dropdown Menu */}
                 {isUserMenuOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 py-1">
-                    {user.role === 'ADMIN' && (
+                    {user.role === "ADMIN" && (
                       <Link
                         href="/admin/dashboard"
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-purple-50"
@@ -127,14 +149,10 @@ export default function Header() {
 
             {/* Mobile Menu Button */}
             <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              onClick={() => setIsMenuOpen((prev) => !prev)}
               className="md:hidden p-2 hover:bg-gray-100 rounded-full transition-colors"
             >
-              {isMenuOpen ? (
-                <X className="w-6 h-6" />
-              ) : (
-                <Menu className="w-6 h-6" />
-              )}
+              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>

@@ -14,13 +14,13 @@ import Header from "../components/header";
 import Footer from "../components/footer";
 
 export default function ProductsPage() {
-  const [products, setProducts] = useState([]); // Will store real product data
+  const [products, setProducts] = useState([]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Fetch real products from the API endpoint
+  // 1. Fetch the products
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -34,9 +34,25 @@ export default function ProductsPage() {
         console.error("Error fetching products:", error);
       }
     };
-
     fetchProducts();
   }, []);
+
+  // 2. Handle Add to Cart
+  const handleAddToCart = (product) => {
+    try {
+      let currentCart = JSON.parse(localStorage.getItem("cart")) || [];
+      currentCart.push({ ...product, quantity: 1 });
+      localStorage.setItem("cart", JSON.stringify(currentCart));
+  
+      // Dispatch an event to let the Header know the cart changed
+      window.dispatchEvent(new Event("cart-updated"));
+  
+      alert(`¡${product.name} ha sido agregado al carrito!`);
+    } catch (err) {
+      console.error("Error adding item to cart:", err);
+    }
+  };
+  
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -82,7 +98,7 @@ export default function ProductsPage() {
                   <div className="mb-8">
                     <h3 className="font-medium mb-4 text-gray-800">Categorías</h3>
                     <div className="space-y-3">
-                      {['all', 'smartphones', 'laptops'].map((category) => (
+                      {["all", "smartphones", "laptops"].map((category) => (
                         <label key={category} className="flex items-center">
                           <input
                             type="radio"
@@ -98,6 +114,7 @@ export default function ProductsPage() {
                       ))}
                     </div>
                   </div>
+
                   {/* Price Range */}
                   <div className="mb-8">
                     <h3 className="font-medium mb-4 text-gray-800">Precio</h3>
@@ -107,7 +124,9 @@ export default function ProductsPage() {
                         min="0"
                         max="1000"
                         value={priceRange[1]}
-                        onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
+                        onChange={(e) =>
+                          setPriceRange([priceRange[0], parseInt(e.target.value)])
+                        }
                         className="w-full"
                       />
                       <div className="flex items-center justify-between">
@@ -116,23 +135,33 @@ export default function ProductsPage() {
                       </div>
                     </div>
                   </div>
+
                   {/* Ratings */}
                   <div className="mb-8">
                     <h3 className="font-medium mb-4 text-gray-800">Valoración</h3>
                     <div className="space-y-3">
                       {[5, 4, 3, 2, 1].map((rating) => (
                         <label key={rating} className="flex items-center">
-                          <input type="checkbox" className="w-4 h-4 text-purple-600 rounded" />
+                          <input
+                            type="checkbox"
+                            className="w-4 h-4 text-purple-600 rounded"
+                          />
                           <span className="ml-3 flex items-center text-gray-700">
-                            {Array(rating).fill(null).map((_, i) => (
-                              <Star key={i} className="w-4 h-4 fill-current text-yellow-400" />
-                            ))}
+                            {Array(rating)
+                              .fill(null)
+                              .map((_, i) => (
+                                <Star
+                                  key={i}
+                                  className="w-4 h-4 fill-current text-yellow-400"
+                                />
+                              ))}
                             <span className="ml-2">y más</span>
                           </span>
                         </label>
                       ))}
                     </div>
                   </div>
+
                   <button className="w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
                     Aplicar Filtros
                   </button>
@@ -158,7 +187,7 @@ export default function ProductsPage() {
                           <X className="w-6 h-6" />
                         </button>
                       </div>
-                      {/* Mobile filters content */}
+                      {/* Mobile filters content can go here */}
                     </div>
                   </div>
                 </div>
@@ -183,56 +212,71 @@ export default function ProductsPage() {
                 {/* Products Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {products.map((product) => (
-                 <div key={product.id} className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow p-4">
-                  {/* Product Image */}
-                 <div className="relative h-52 mb-4 flex items-center justify-center bg-gray-50 rounded-xl p-3">
-                   <div className="relative h-full max-w-[70%] flex items-center justify-center">
-                     <img
-                       src={product.imageUrl}
-                       alt={product.name}
-                       className="h-full object-contain"
-                     />
-                   </div>
-                   <button className="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm hover:bg-gray-50 transition-colors">
-                     <Heart className="w-4 h-4 text-gray-700" />
-                   </button>
-                 </div>
-                 
-                 {/* Product Info with Improved Spacing */}
-                 <div>
-                   <div className="flex items-start justify-between mb-1">
-                     <h3 className="font-semibold text-lg text-gray-800 line-clamp-2">{product.name}</h3>
-                     <span className="text-xs font-medium bg-blue-50 text-blue-600 px-2 py-1 rounded-full whitespace-nowrap ml-2">
-                       {product.category}
-                     </span>
-                   </div>
-                   
-                   <div className="flex items-center mb-3">
-                     <div className="flex items-center">
-                       {Array(5).fill(null).map((_, i) => (
-                         <Star key={i} className="w-4 h-4 text-yellow-400" fill={i < Math.floor(4.5) ? "currentColor" : "none"} />
-                       ))}
-                     </div>
-                     <span className="text-sm text-gray-600 ml-2">(4.5)</span>
-                   </div>
-                   
-                   <div className="flex items-center justify-between">
-                     <div>
-                       <p className="text-xl font-bold text-purple-600">
-                         ${typeof product.price === 'number' ? product.price.toFixed(2) : product.price}
-                       </p>
-                       {product.stock > 0 ? (
-                         <p className="text-xs text-green-600">{product.stock} in stock</p>
-                       ) : (
-                         <p className="text-xs text-red-600">Out of stock</p>
-                       )}
-                     </div>
-                     <button className="p-2.5 rounded-xl bg-purple-100 text-purple-600 hover:bg-purple-200 transition-colors">
-                       <ShoppingCart className="w-5 h-5" />
-                     </button>
-                   </div>
-                 </div>
-               </div>
+                    <div
+                      key={product.id}
+                      className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow p-4"
+                    >
+                      {/* Product Image */}
+                      <div className="relative h-52 mb-4 flex items-center justify-center bg-gray-50 rounded-xl p-3">
+                        <div className="relative h-full max-w-[70%] flex items-center justify-center">
+                          <img
+                            src={product.imageUrl}
+                            alt={product.name}
+                            className="h-full object-contain"
+                          />
+                        </div>
+                        <button className="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm hover:bg-gray-50 transition-colors">
+                          <Heart className="w-4 h-4 text-gray-700" />
+                        </button>
+                      </div>
+
+                      {/* Product Info */}
+                      <div>
+                        <div className="flex items-start justify-between mb-1">
+                          <h3 className="font-semibold text-lg text-gray-800 line-clamp-2">
+                            {product.name}
+                          </h3>
+                          <span className="text-xs font-medium bg-blue-50 text-blue-600 px-2 py-1 rounded-full whitespace-nowrap ml-2">
+                            {product.category}
+                          </span>
+                        </div>
+                        <div className="flex items-center mb-3">
+                          <div className="flex items-center">
+                            {Array(5).fill(null).map((_, i) => (
+                              <Star
+                                key={i}
+                                className="w-4 h-4 text-yellow-400"
+                                fill={i < Math.floor(4.5) ? "currentColor" : "none"}
+                              />
+                            ))}
+                          </div>
+                          <span className="text-sm text-gray-600 ml-2">(4.5)</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-xl font-bold text-purple-600">
+                              $
+                              {typeof product.price === "number"
+                                ? product.price.toFixed(2)
+                                : product.price}
+                            </p>
+                            {product.stock > 0 ? (
+                              <p className="text-xs text-green-600">
+                                {product.stock} in stock
+                              </p>
+                            ) : (
+                              <p className="text-xs text-red-600">Out of stock</p>
+                            )}
+                          </div>
+                          <button
+                            onClick={() => handleAddToCart(product)}
+                            className="p-2.5 rounded-xl bg-purple-100 text-purple-600 hover:bg-purple-200 transition-colors"
+                          >
+                            <ShoppingCart className="w-5 h-5" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   ))}
                 </div>
 
@@ -258,7 +302,6 @@ export default function ProductsPage() {
           </div>
         </section>
       </main>
-
       <Footer />
     </div>
   );
