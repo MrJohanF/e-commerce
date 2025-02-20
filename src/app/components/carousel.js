@@ -76,14 +76,14 @@ const ProductCarousel = () => {
                         </div>
                         <div className="w-full md:w-1/2 text-center md:text-left">
                           <div className="mb-4">
-                            <h3 className="text-2xl font-bold mb-2">
+                            <h3 className="text-gray-600 text-2xl font-bold mb-2">
                               {product.name}
                             </h3>
                             <p className="text-gray-600 mb-4">
                               {product.description}
                             </p>
                             <p className="text-3xl font-bold text-purple-600 mb-6">
-                              {product.price}
+                              $ {product.price}
                             </p>
                           </div>
                           <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
