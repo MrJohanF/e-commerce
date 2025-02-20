@@ -88,6 +88,7 @@ const Navbar = ({ onViewChange, activeView }) => {
                 <Plus className="h-4 w-4 mr-2" />
                 Agregar Producto
               </button>
+              
             </div>
           </div>
 

@@ -106,7 +106,7 @@ const ProductsList = () => {
                 
                 <div className="mt-4 flex justify-end space-x-2">
                   <button
-                    onClick={() => router.push(`/edit-product/${product.id}`)}
+                    onClick={() => router.push(`/admin/products/edit-product/${product.id}`)}
                     className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                   >
                     <Edit className="h-5 w-5" />
