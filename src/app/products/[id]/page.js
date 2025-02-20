@@ -1,15 +1,27 @@
-import React from 'react';
-import { Star, ShoppingCart, ChevronRight, Heart, Share2, Truck, Shield, ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
-import Image from 'next/image';
-import Header from '../../components/header.js';
+import React from "react";
+import {
+  Star,
+  ShoppingCart,
+  ChevronRight,
+  Heart,
+  Share2,
+  Truck,
+  Shield,
+  ArrowLeft,
+} from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
+import Header from "../../components/header.js";
 
 function Footer() {
   return (
     <footer className="bg-gray-900 text-gray-400">
       <div className="container mx-auto px-4 py-12">
         <div className="border-t border-gray-800 pt-8 text-center">
-          <p>&copy; {new Date().getFullYear()} Tienda Virtual. Todos los derechos reservados.</p>
+          <p>
+            &copy; {new Date().getFullYear()} Tienda Virtual. Todos los derechos
+            reservados.
+          </p>
         </div>
       </div>
     </footer>
@@ -37,8 +49,8 @@ export default async function ProductDetailPage({ params }) {
             <p className="text-gray-600 text-center mb-4">
               Lo sentimos, no pudimos encontrar el producto que estás buscando.
             </p>
-            <Link 
-              href="/products" 
+            <Link
+              href="/products"
               className="flex items-center justify-center text-purple-600 hover:text-purple-700 font-medium"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
@@ -65,12 +77,17 @@ export default async function ProductDetailPage({ params }) {
             </li>
             <ChevronRight className="w-4 h-4 text-gray-400" />
             <li>
-              <Link href="/products" className="text-gray-600 hover:text-purple-600">
+              <Link
+                href="/products"
+                className="text-gray-600 hover:text-purple-600"
+              >
                 Productos
               </Link>
             </li>
             <ChevronRight className="w-4 h-4 text-gray-400" />
-            <li className="text-gray-400 truncate max-w-[200px]">{product.name}</li>
+            <li className="text-gray-400 truncate max-w-[200px]">
+              {product.name}
+            </li>
           </ol>
         </nav>
 
@@ -79,15 +96,16 @@ export default async function ProductDetailPage({ params }) {
           <div className="flex flex-col lg:flex-row gap-12">
             {/* Image Gallery */}
             <div className="lg:w-1/2 space-y-6">
-              <div className="aspect-square relative rounded-2xl overflow-hidden bg-white shadow-lg">
-                <Image
-                  src={product.images?.[0] || "/placeholder.png"}
-                  alt={product.name}
-                  fill
-                  className="object-cover"
-                  priority
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                />
+              <div className="relative h-full rounded-2xl overflow-hidden bg-gray-50 shadow-lg flex items-center justify-center p-4">
+                <div className="relative h-full max-w-[80%] flex items-center justify-center">
+                  <img
+                    src={product?.imageUrl || "/placeholder.png"}
+                    alt={product?.name || "Product Image"}
+                    className="h-full object-contain"
+                  />
+                </div>
+
+            
               </div>
               {product.images?.length > 1 && (
                 <div className="grid grid-cols-4 gap-4">
@@ -113,11 +131,17 @@ export default async function ProductDetailPage({ params }) {
             <div className="lg:w-1/2">
               <div>
                 <div className="flex justify-between items-start mb-6">
-                  <h1 className="text-4xl font-bold text-gray-800">{product.name}</h1>
+                  <h1 className="text-4xl font-bold text-gray-800">
+                    {product.name}
+                  </h1>
                   <div className="flex gap-3">
                     <form action="/api/wishlist" method="POST">
-                      <input type="hidden" name="productId" value={product.id} />
-                      <button 
+                      <input
+                        type="hidden"
+                        name="productId"
+                        value={product.id}
+                      />
+                      <button
                         type="submit"
                         className="p-2 rounded-full hover:bg-gray-100 transition-colors"
                       >
@@ -176,8 +200,12 @@ export default async function ProductDetailPage({ params }) {
                   {/* Purchase Actions */}
                   <div className="flex flex-col sm:flex-row gap-4">
                     <form action="/api/cart" method="POST" className="flex-1">
-                      <input type="hidden" name="productId" value={product.id} />
-                      <button 
+                      <input
+                        type="hidden"
+                        name="productId"
+                        value={product.id}
+                      />
+                      <button
                         type="submit"
                         className="w-full px-8 py-4 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-medium transition-colors inline-flex items-center justify-center shadow-lg shadow-purple-100"
                       >
@@ -225,7 +253,10 @@ export default async function ProductDetailPage({ params }) {
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {Object.entries(product.specs).map(([key, value]) => (
-                <div key={key} className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                <div
+                  key={key}
+                  className="bg-white rounded-xl p-6 shadow-sm border border-gray-100"
+                >
                   <h3 className="text-sm font-semibold text-gray-400 uppercase mb-2">
                     {key}
                   </h3>
