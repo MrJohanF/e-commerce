@@ -50,7 +50,7 @@ export default async function ProductDetailPage({ params }) {
               Lo sentimos, no pudimos encontrar el producto que estás buscando.
             </p>
             <Link
-              href="/products"
+              href="/productos"
               className="flex items-center justify-center text-purple-600 hover:text-purple-700 font-medium"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
@@ -78,7 +78,7 @@ export default async function ProductDetailPage({ params }) {
             <ChevronRight className="w-4 h-4 text-gray-400" />
             <li>
               <Link
-                href="/products"
+                href="/productos"
                 className="text-gray-600 hover:text-purple-600"
               >
                 Productos
