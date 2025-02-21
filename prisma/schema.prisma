@@ -33,7 +33,7 @@ model Product {
   category       String
   price          Float
   stock          Int
-  description    String?
+  description    String?  @db.Text
   specifications Json?    // Puedes almacenar un array de objetos (ej.: [{ key: "", value: "" }])
   brand          String?
   model          String?

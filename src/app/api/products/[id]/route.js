@@ -8,7 +8,16 @@ const productSchema = z.object({
   category: z.string().min(1),
   price: z.number().positive("El precio debe ser mayor a 0"),
   stock: z.number().nonnegative("El stock no puede ser negativo"),
-  description: z.string().optional(),
+  description: z.preprocess(
+    (val) => {
+      if (typeof val === "string") {
+        // e.g. replace line breaks with spaces
+        return val.replace(/\r?\n/g, " ");
+      }
+      return val;
+    },
+    z.string().optional()
+  ),
   specifications: z.array(z.object({ key: z.string(), value: z.string() })).optional(),
   brand: z.string().optional(),
   model: z.string().optional(),
@@ -36,16 +45,14 @@ export async function GET(request, { params }) {
 
 export async function PUT(request, { params }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const data = await request.json();
+    console.log("PUT data =>", data);
 
-    // Asegúrate de que price y stock sean números
     data.price = Number(data.price);
     data.stock = Number(data.stock);
 
-    // Validar la data con Zod
     const parsedData = productSchema.parse(data);
-
     const updatedProduct = await prisma.product.update({
       where: { id: Number(id) },
       data: parsedData,
@@ -53,10 +60,15 @@ export async function PUT(request, { params }) {
 
     return NextResponse.json(updatedProduct);
   } catch (error) {
-    console.error("Error actualizando producto:", error);
+    if (error instanceof z.ZodError) {
+      console.error("Zod validation failed:", error.issues);
+    } else {
+      console.error("Error actualizando producto:", error);
+    }
     return NextResponse.json({ error: "Error actualizando producto" }, { status: 500 });
   }
 }
+
 
 
 export async function DELETE(request, { params }) {
