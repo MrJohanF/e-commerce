@@ -15,27 +15,37 @@ import Footer from "../components/footer";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1); // Keep track of how many pages we have
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // 1. Fetch the products
+  // How many products you want per page
+  const limit = 9;
+
+  // 1. Fetch products with pagination
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch("/api/products");
+        // Pass page and limit as query params
+        const res = await fetch(`/api/products?page=${currentPage}&limit=${limit}`);
         if (!res.ok) {
           throw new Error("Error fetching products");
         }
         const data = await res.json();
-        setProducts(data);
+        
+        // data should include { products, totalPages }
+        setProducts(data.products);
+        setTotalPages(data.totalPages);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
     };
+    
     fetchProducts();
-  }, []);
+  }, [currentPage, limit]);
 
   // 2. Handle Add to Cart
   const handleAddToCart = (product) => {
@@ -59,8 +69,14 @@ export default function ProductsPage() {
       console.error("Error adding item to cart:", err);
     }
   };
-  
-  
+
+  // 3. Pagination helper to move to a different page
+  const handlePageChange = (newPage) => {
+    // Ensure newPage is within valid range
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -195,7 +211,7 @@ export default function ProductsPage() {
                           <X className="w-6 h-6" />
                         </button>
                       </div>
-                      {/* Mobile filters content can go here */}
+                      {/* Add your mobile filters content here */}
                     </div>
                   </div>
                 </div>
@@ -205,7 +221,9 @@ export default function ProductsPage() {
               <div className="flex-1">
                 {/* Sort Options */}
                 <div className="flex justify-between items-center mb-8">
-                  <p className="text-gray-700">Mostrando {products.length} productos</p>
+                  <p className="text-gray-700">
+                    Mostrando {products.length} productos (página {currentPage} de {totalPages})
+                  </p>
                   <div className="relative">
                     <select className="appearance-none bg-white border border-gray-200 rounded-lg px-4 py-2 pr-8 text-gray-700">
                       <option>Más Relevantes</option>
@@ -288,21 +306,49 @@ export default function ProductsPage() {
                   ))}
                 </div>
 
-                {/* Pagination */}
+                {/* 4. Pagination Controls */}
                 <div className="mt-12 flex justify-center">
                   <div className="flex gap-2">
-                    {[1, 2, 3, "...", 10].map((page, index) => (
+                    {/* Previous Page */}
+                    <button
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                        currentPage === 1
+                          ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                          : "bg-white text-gray-700 hover:bg-purple-50"
+                      }`}
+                      disabled={currentPage === 1}
+                    >
+                      &lt;
+                    </button>
+
+                    {/* Dynamically render page buttons (simple version) */}
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
                       <button
-                        key={index}
+                        key={pageNumber}
+                        onClick={() => handlePageChange(pageNumber)}
                         className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                          page === 1
+                          pageNumber === currentPage
                             ? "bg-purple-600 text-white"
                             : "bg-white text-gray-700 hover:bg-purple-50"
                         }`}
                       >
-                        {page}
+                        {pageNumber}
                       </button>
                     ))}
+
+                    {/* Next Page */}
+                    <button
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                        currentPage === totalPages
+                          ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                          : "bg-white text-gray-700 hover:bg-purple-50"
+                      }`}
+                      disabled={currentPage === totalPages}
+                    >
+                      &gt;
+                    </button>
                   </div>
                 </div>
               </div>
