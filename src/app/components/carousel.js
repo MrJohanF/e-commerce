@@ -11,12 +11,12 @@ const ProductCarousel = () => {
   
     const fetchProducts = async () => {
       try {
-        const res = await fetch("/api/products");
+        const res = await fetch(`/api/products?page=1&limit=5`);
         if (!res.ok) {
           throw new Error("Error fetching products");
         }
         const data = await res.json();
-        setProducts(data);
+        setProducts(data.products);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
