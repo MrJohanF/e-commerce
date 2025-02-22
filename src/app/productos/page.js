@@ -52,10 +52,8 @@ export default function ProductsPage() {
         // Otherwise, push a new entry with quantity = 1
         currentCart.push({ ...product, quantity: 1 });
       }
-  
       localStorage.setItem("cart", JSON.stringify(currentCart));
       window.dispatchEvent(new Event("cart-updated"));
-      //alert(`¡${product.name} se ha agregado al carrito!`);
   
     } catch (err) {
       console.error("Error adding item to cart:", err);
