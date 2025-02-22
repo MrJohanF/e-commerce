@@ -63,8 +63,39 @@ const AccountSettings = () => {
       console.error("Error updating password:", err);
     }
   }
-  
 
+  async function handleSaveProfile() {
+    try {
+      if (!user) {
+        showToast("No se encontró usuario. Inicia sesión nuevamente.", "error");
+        return;
+      }
+  
+      // Example: user has { id, name, email } in state
+      const response = await fetch("/api/users/update-profile", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          name: user.name,
+          email: user.email
+        })
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Error al actualizar el perfil");
+      }
+  
+      showToast("¡Perfil actualizado exitosamente!");
+    } catch (err) {
+      showToast(err.message, "error");
+      console.error("Error updating profile:", err);
+    }
+  }
+  
   useEffect(() => {
     const adminUser = localStorage.getItem("adminUser");
     if (adminUser) {
