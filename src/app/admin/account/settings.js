@@ -74,7 +74,12 @@ const AccountSettings = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    setUser((prev) => ({
+      ...prev,
+      [name]: value
+    }));
   };
+  
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
