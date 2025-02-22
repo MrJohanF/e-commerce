@@ -1,26 +1,20 @@
-import React, { useState } from 'react';
-import { Settings, User, Lock, Mail, Camera, Bell, Shield, ChevronRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { User, Camera, Bell, Shield, ChevronRight } from 'lucide-react';
 
 const AccountSettings = () => {
   const [activeTab, setActiveTab] = useState('profile');
-  const [formData, setFormData] = useState({
-    name: 'John Doe',
-    email: 'john@example.com',
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: '',
-    notifications: {
-      email: true,
-      push: false
+  const [user, setUser] = useState(null);
+
+
+  useEffect(() => {
+    const adminUser = localStorage.getItem("adminUser");
+    if (adminUser) {
+      setUser(JSON.parse(adminUser));
     }
-  });
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
   };
 
   return (
@@ -90,9 +84,9 @@ const AccountSettings = () => {
                   <input
                     type="text"
                     name="name"
-                    value={formData.name}
+                    value={user?.name || ''}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none"
+                    className="text-gray-600 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none"
                     placeholder="Tu nombre completo"
                   />
                 </div>
@@ -104,9 +98,9 @@ const AccountSettings = () => {
                   <input
                     type="email"
                     name="email"
-                    value={formData.email}
+                    value={user?.email || ''}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none"
+                    className="text-gray-500 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none"
                     placeholder="tu@email.com"
                   />
                 </div>
