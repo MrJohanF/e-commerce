@@ -8,7 +8,11 @@ const AccountSettings = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [toast, setToast] = useState({ show: false, message: "", type: "success" });
+  const [toast, setToast] = useState({
+    show: false,
+    message: "",
+    type: "success",
+  });
 
   const showToast = (message, type = "success") => {
     setToast({ show: true, message, type });
@@ -28,7 +32,7 @@ const AccountSettings = () => {
       showToast("La nueva contraseña y su confirmación no coinciden.", "error");
       return;
     }
-  
+
     try {
       // User's ID in localStorage or from your user state
       const adminUser = localStorage.getItem("adminUser");
@@ -37,17 +41,17 @@ const AccountSettings = () => {
         return;
       }
       const userData = JSON.parse(adminUser);
-  
-      const res = await fetch("/api/auth/change-password", {
+
+      const res = await fetch("/api/user/change-password", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userId: userData.id,      // or userData.userId, depending on your object
+          userId: userData.id, // or userData.userId, depending on your object
           currentPassword,
-          newPassword
-        })
+          newPassword,
+        }),
       });
       if (!res.ok) {
         const errorData = await res.json();
@@ -70,32 +74,35 @@ const AccountSettings = () => {
         showToast("No se encontró usuario. Inicia sesión nuevamente.", "error");
         return;
       }
-  
+
       // Example: user has { id, name, email } in state
-      const response = await fetch("/api/users/update-profile", {
+      const response = await fetch("/api/user/update-profile", {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           userId: user.id,
           name: user.name,
-          email: user.email
-        })
+          email: user.email,
+        }),
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || "Error al actualizar el perfil");
       }
-  
+
+      // Update localStorage with the new name/email
+      localStorage.setItem("adminUser", JSON.stringify(user));
+
       showToast("¡Perfil actualizado exitosamente!");
     } catch (err) {
       showToast(err.message, "error");
       console.error("Error updating profile:", err);
     }
   }
-  
+
   useEffect(() => {
     const adminUser = localStorage.getItem("adminUser");
     if (adminUser) {
@@ -107,19 +114,14 @@ const AccountSettings = () => {
     const { name, value } = e.target;
     setUser((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
-  
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
-                  {toast.show && (
-        <Toast
-          message={toast.message}
-          type={toast.type}
-          onClose={hideToast}
-        />
+      {toast.show && (
+        <Toast message={toast.message} type={toast.type} onClose={hideToast} />
       )}
       {/* Header */}
       <div className="mb-8">
@@ -219,7 +221,10 @@ const AccountSettings = () => {
                   />
                 </div>
 
-                <button className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition-colors duration-200 flex items-center">
+                <button
+                  onClick={handleSaveProfile}
+                  className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition-colors duration-200 flex items-center"
+                >
                   Guardar Cambios
                 </button>
               </div>
@@ -237,7 +242,7 @@ const AccountSettings = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Contraseña Actual
                     </label>
-                    
+
                     <input
                       type="password"
                       name="currentPassword"
