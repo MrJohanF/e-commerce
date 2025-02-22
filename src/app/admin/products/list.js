@@ -12,33 +12,54 @@ import {
   Tag,
   AlertTriangle,
   Heart,
-  Star
+  Star,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { set } from "zod";
 
 const ProductsList = () => {
   const [products, setProducts] = useState([]); // Stores array
   const [isDeleting, setIsDeleting] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null); // Stores entire product object
   const router = useRouter();
+  const [totalPages, setTotalPages] = useState(1); // Keep track of how many pages we have
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // How many products you want per page
+  const limit = 9;
 
   // Fetch products from API
-  const fetchProducts = async () => {
-    try {
-      const res = await fetch("/api/products");
-      if (!res.ok) {
-        throw new Error("Error fetching products");
-      }
-      const data = await res.json();
-      setProducts(data);
-    } catch (error) {
-      console.error("Error fetching products:", error);
-    }
-  };
-
   useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        // Pass page and limit as query params
+        const res = await fetch(
+          `/api/products?page=${currentPage}&limit=${limit}`
+        );
+        if (!res.ok) {
+          throw new Error("Error fetching products");
+        }
+        const data = await res.json();
+
+         // data should include { products, totalPages }
+
+        setProducts(data.products);
+        setTotalPages(data.totalPages);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
     fetchProducts();
-  }, []);
+  }, [currentPage, limit]);
+
+
+    // 3. Pagination helper to move to a different page
+    const handlePageChange = (newPage) => {
+      // Ensure newPage is within valid range
+      if (newPage >= 1 && newPage <= totalPages) {
+        setCurrentPage(newPage);
+      }
+    };
 
   // When Delete button is clicked, open confirmation modal
   const handleDeleteClick = (product) => {
@@ -133,7 +154,10 @@ const ProductsList = () => {
                   <p className="text-gray-500">{product.category}</p>
                   <div className="flex items-center justify-between mt-2">
                     <p className="text-purple-700 font-bold text-lg">
-                      ${typeof product.price === "number" ? product.price.toFixed(2) : product.price}
+                      $
+                      {typeof product.price === "number"
+                        ? product.price.toFixed(2)
+                        : product.price}
                     </p>
                     <div className="flex items-center gap-1.5">
                       <Package className="h-4 w-4 text-gray-500" />
@@ -154,7 +178,9 @@ const ProductsList = () => {
                 {/* Action Footer */}
                 <div className="mt-auto border-t border-gray-100 flex">
                   <button
-                    onClick={() => router.push(`/admin/products/edit-product/${product.id}`)}
+                    onClick={() =>
+                      router.push(`/admin/products/edit-product/${product.id}`)
+                    }
                     className="flex items-center justify-center gap-1.5 py-2.5 flex-1 text-blue-600 hover:bg-blue-50 transition-colors"
                   >
                     <Edit className="h-5 w-5" />
@@ -175,19 +201,69 @@ const ProductsList = () => {
         </div>
       </div>
 
+
+                      {/* 4. Pagination Controls */}
+                      <div className="mt-12 flex justify-center">
+                  <div className="flex gap-2">
+                    {/* Previous Page */}
+                    <button
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                        currentPage === 1
+                          ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                          : "bg-white text-gray-700 hover:bg-purple-50"
+                      }`}
+                      disabled={currentPage === 1}
+                    >
+                      &lt;
+                    </button>
+
+                    {/* Dynamically render page buttons (simple version) */}
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
+                      <button
+                        key={pageNumber}
+                        onClick={() => handlePageChange(pageNumber)}
+                        className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                          pageNumber === currentPage
+                            ? "bg-purple-600 text-white"
+                            : "bg-white text-gray-700 hover:bg-purple-50"
+                        }`}
+                      >
+                        {pageNumber}
+                      </button>
+                    ))}
+
+                    {/* Next Page */}
+                    <button
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                        currentPage === totalPages
+                          ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                          : "bg-white text-gray-700 hover:bg-purple-50"
+                      }`}
+                      disabled={currentPage === totalPages}
+                    >
+                      &gt;
+                    </button>
+                  </div>
+                </div>
+
       {/* Delete Confirmation Modal */}
       {productToDelete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm transition-opacity">
           <div className="bg-white p-8 rounded-xl shadow-xl max-w-md w-full transform transition-all scale-95 hover:scale-100">
             <div className="flex items-center gap-3 mb-5">
               <AlertTriangle className="h-6 w-6 text-red-500" />
-              <h2 className="text-xl font-bold text-gray-800">Confirmar Borrar</h2>
+              <h2 className="text-xl font-bold text-gray-800">
+                Confirmar Borrar
+              </h2>
             </div>
             <p className="mb-6 text-gray-600">
               ¿Estás seguro de que quieres borrar{" "}
               <span className="font-medium text-gray-900">
                 {productToDelete.name || "Este Producto"}
-              </span>? Esta acción no puede deshacerse.
+              </span>
+              ? Esta acción no puede deshacerse.
             </p>
             <div className="flex justify-end gap-4 mt-8">
               <button
