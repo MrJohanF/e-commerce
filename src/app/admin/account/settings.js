@@ -254,7 +254,7 @@ const AccountSettings = () => {
                 <label className="flex items-center space-x-3">
                   <input
                     type="checkbox"
-                    checked={formData.notifications.email}
+                    checked={false}
                     onChange={() => {}}
                     className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
                   />
@@ -265,7 +265,7 @@ const AccountSettings = () => {
                 <label className="flex items-center space-x-3">
                   <input
                     type="checkbox"
-                    checked={formData.notifications.push}
+                    checked={false}
                     onChange={() => {}}
                     className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
                   />
