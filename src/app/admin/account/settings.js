@@ -21,7 +21,7 @@ const AccountSettings = () => {
     }
   
     try {
-      // Assuming you have the user's ID in localStorage or from your user state
+      // User's ID in localStorage or from your user state
       const adminUser = localStorage.getItem("adminUser");
       if (!adminUser) {
         alert("No se encontró usuario. Inicia sesión nuevamente.");
@@ -190,7 +190,7 @@ const AccountSettings = () => {
                       name="currentPassword"
                       value={currentPassword}
                       onChange={(e) => setCurrentPassword(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                      className="text-gray-600 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
                     />
                   </div>
                   <div>
@@ -202,7 +202,7 @@ const AccountSettings = () => {
                       name="newPassword"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                      className="text-gray-600 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
                     />
                   </div>
                   <div>
@@ -214,7 +214,7 @@ const AccountSettings = () => {
                       name="confirmPassword"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                      className="text-gray-600 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
                     />
                   </div>
                 </div>
