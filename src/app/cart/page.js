@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { 
-  ShoppingCart, 
-  ArrowLeft, 
-  Trash2, 
-  Plus, 
-  Minus, 
+import {
+  ShoppingCart,
+  ArrowLeft,
+  Trash2,
+  Plus,
+  Minus,
   CreditCard,
   Tag,
   TruckIcon,
@@ -17,58 +17,66 @@ import Header from "../components/header";
 import Footer from "../components/footer";
 
 export default function CartPage() {
-  // State for cart items and loading
+  // State para items del carrito y estado de carga
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [initialized, setInitialized] = useState(false);
 
-  // On mount, read the cart from localStorage
+  // Al montar el componente, leer el carrito de localStorage
   useEffect(() => {
     try {
       const cart = JSON.parse(localStorage.getItem("cart")) || [];
       setCartItems(cart);
     } catch (error) {
-      console.error("Error reading cart:", error);
+      console.error("Error leyendo el carrito:", error);
     }
+    
     setLoading(false);
-    setInitialized(true); // We've now done our initial load
+    setInitialized(true); // Marcamos que hicimos la carga inicial
   }, []);
 
-  // Calculate cart totals
-  const subtotal = cartItems.reduce((total, item) => total + (item.price * (item.quantity || 1)), 0);
+  // Cálculos de totales
+  const subtotal = cartItems.reduce(
+    (total, item) => total + (item.price * (item.quantity || 1)), 
+    0
+  );
   const shipping = subtotal > 0 ? 4.99 : 0;
   const tax = subtotal * 0.08;
   const total = subtotal + shipping + tax;
 
-  // Handle quantity changes
+  // Manejo de cantidades
   const updateQuantity = (id, change) => {
-    setCartItems((prev) => 
-      prev.map(item => {
+    setCartItems(prev => {
+      return prev.map(item => {
         if (item.id === id) {
-          // item.stock might not exist if it wasn't stored in localStorage, so safely handle that
           const maxStock = item.stock ?? 99; 
           const oldQty = item.quantity ?? 1;
           const newQty = Math.max(1, Math.min(maxStock, oldQty + change));
           return { ...item, quantity: newQty };
         }
         return item;
-      })
-    );
+      });
+    });
   };
 
-  // Remove item from cart
+  // Eliminar un producto del carrito
   const removeItem = (id) => {
     setCartItems(prev => prev.filter(item => item.id !== id));
   };
 
-  // Update localStorage whenever cartItems changes
+  // Sincronizar el carrito con localStorage cada vez que cambie `cartItems`
+  // y luego despachar el evento cart-updated en el próximo "tick" (setTimeout).
   useEffect(() => {
     if (initialized) {
       localStorage.setItem("cart", JSON.stringify(cartItems));
+      // Dispara el evento en el siguiente tick para no interrumpir el render
+      setTimeout(() => {
+        window.dispatchEvent(new Event("cart-updated"));
+      }, 0);
     }
   }, [cartItems, initialized]);
 
-  // Render fallback image component
+  // Imagen con fallback
   const ImageWithFallback = ({ src, alt, className }) => {
     const [hasError, setHasError] = useState(false);
     if (hasError) {
@@ -113,6 +121,7 @@ export default function CartPage() {
         <section className="py-12">
           <div className="container mx-auto px-4">
             {loading ? (
+              // Loading spinner
               <div className="flex justify-center py-12">
                 <div className="animate-pulse flex space-x-4">
                   <div className="h-12 w-12 bg-purple-200 rounded-full"></div>
@@ -123,20 +132,25 @@ export default function CartPage() {
                 </div>
               </div>
             ) : cartItems.length === 0 ? (
+              // Carrito vacío
               <div className="max-w-4xl mx-auto text-center py-16">
                 <div className="bg-white rounded-2xl shadow-sm p-10 max-w-xl mx-auto">
                   <ShoppingCart className="mx-auto h-16 w-16 text-purple-300 mb-6" />
                   <h2 className="text-2xl font-bold mb-3 text-gray-800">Tu carrito está vacío</h2>
                   <p className="text-gray-600 mb-8">Parece que aún no has añadido productos a tu carrito.</p>
-                  <Link href="/productos" className="px-6 py-3 bg-purple-600 text-white rounded-xl font-medium hover:bg-purple-700 transition-colors inline-flex items-center">
+                  <Link
+                    href="/productos"
+                    className="px-6 py-3 bg-purple-600 text-white rounded-xl font-medium hover:bg-purple-700 transition-colors inline-flex items-center"
+                  >
                     <ArrowLeft className="h-4 w-4 mr-2" />
                     Explorar Productos
                   </Link>
                 </div>
               </div>
             ) : (
+              // Carrito con productos
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Cart Items Section */}
+                {/* Sección de items en el carrito */}
                 <div className="lg:col-span-2">
                   <div className="mb-6 flex items-center">
                     <h2 className="text-xl font-bold text-gray-800">
@@ -144,12 +158,11 @@ export default function CartPage() {
                     </h2>
                   </div>
 
-                  {/* Cart Items */}
                   <div className="space-y-6">
                     {cartItems.map((item) => (
                       <div key={item.id} className="bg-white rounded-2xl shadow-sm p-4 md:p-6">
                         <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
-                          {/* Product Image */}
+                          {/* Imagen */}
                           <div className="h-24 w-24 md:h-28 md:w-28 flex-shrink-0 bg-gray-50 rounded-xl p-2 flex items-center justify-center">
                             <ImageWithFallback
                               src={item.imageUrl}
@@ -158,7 +171,7 @@ export default function CartPage() {
                             />
                           </div>
                           
-                          {/* Product Info */}
+                          {/* Info del producto */}
                           <div className="flex-1">
                             <div className="flex items-start justify-between gap-2">
                               <div>
@@ -179,14 +192,14 @@ export default function CartPage() {
                               </p>
                             </div>
                             
-                            {/* Quantity Controls */}
+                            {/* Controles de cantidad */}
                             <div className="flex items-center justify-between mt-4">
                               <div className="flex items-center border border-gray-200 rounded-lg">
                                 <button
                                   onClick={() => updateQuantity(item.id, -1)}
                                   className="p-2 text-gray-600 hover:bg-gray-50 rounded-l-lg disabled:opacity-50"
                                   disabled={(item.quantity ?? 1) <= 1}
-                                  aria-label="Decrease quantity"
+                                  aria-label="Disminuir cantidad"
                                 >
                                   <Minus className="h-4 w-4" />
                                 </button>
@@ -195,7 +208,7 @@ export default function CartPage() {
                                   onClick={() => updateQuantity(item.id, 1)}
                                   className="p-2 text-gray-600 hover:bg-gray-50 rounded-r-lg disabled:opacity-50"
                                   disabled={(item.quantity ?? 1) >= (item.stock ?? 99)}
-                                  aria-label="Increase quantity"
+                                  aria-label="Aumentar cantidad"
                                 >
                                   <Plus className="h-4 w-4" />
                                 </button>
@@ -215,16 +228,19 @@ export default function CartPage() {
                     ))}
                   </div>
                   
-                  {/* Continue Shopping Link */}
+                  {/* Enlace para seguir comprando */}
                   <div className="mt-8">
-                    <Link href="/productos" className="inline-flex items-center text-purple-600 hover:text-purple-800 font-medium">
+                    <Link
+                      href="/productos"
+                      className="inline-flex items-center text-purple-600 hover:text-purple-800 font-medium"
+                    >
                       <ArrowLeft className="h-4 w-4 mr-2" />
                       Continuar Comprando
                     </Link>
                   </div>
                 </div>
                 
-                {/* Order Summary Section */}
+                {/* Resumen de compra */}
                 <div className="lg:col-span-1">
                   <div className="bg-white rounded-2xl shadow-sm p-6 sticky top-4">
                     <h2 className="text-xl font-bold mb-6 text-gray-800">Resumen de Compra</h2>
@@ -232,24 +248,32 @@ export default function CartPage() {
                     <div className="space-y-3">
                       <div className="flex justify-between py-2">
                         <p className="text-gray-600">Subtotal</p>
-                        <p className="text-gray-600 font-medium">${subtotal.toFixed(2)}</p>
+                        <p className="text-gray-600 font-medium">
+                          ${subtotal.toFixed(2)}
+                        </p>
                       </div>
                       <div className="flex justify-between py-2">
                         <p className="text-gray-600">Envío</p>
-                        <p className="text-gray-600 font-medium">${shipping.toFixed(2)}</p>
+                        <p className="text-gray-600 font-medium">
+                          ${shipping.toFixed(2)}
+                        </p>
                       </div>
                       <div className="flex justify-between py-2">
                         <p className="text-gray-600">Impuestos</p>
-                        <p className="text-gray-600 font-medium">${tax.toFixed(2)}</p>
+                        <p className="text-gray-600 font-medium">
+                          ${tax.toFixed(2)}
+                        </p>
                       </div>
                       <div className="border-t border-gray-200 my-4"></div>
                       <div className="flex justify-between py-2">
                         <p className="text-xl font-bold text-gray-800">Total</p>
-                        <p className="text-xl font-bold text-purple-600">${total.toFixed(2)}</p>
+                        <p className="text-xl font-bold text-purple-600">
+                          ${total.toFixed(2)}
+                        </p>
                       </div>
                     </div>
                     
-                    {/* Promotional Features */}
+                    {/* Features promocionales */}
                     <div className="mt-6 bg-blue-50 p-4 rounded-xl">
                       <div className="flex items-start">
                         <TruckIcon className="h-5 w-5 text-blue-600 mr-3 mt-0.5" />
@@ -279,7 +303,7 @@ export default function CartPage() {
                       </div>
                     </div>
                     
-                    {/* Checkout Button */}
+                    {/* Botón de pago */}
                     <button
                       type="button"
                       className="mt-8 w-full flex items-center justify-center bg-purple-600 py-3 px-4 rounded-xl text-white font-medium hover:bg-purple-700 transition-colors"
@@ -288,7 +312,7 @@ export default function CartPage() {
                       Proceder al Pago
                     </button>
                     
-                    {/* Payment Methods */}
+                    {/* Métodos de pago */}
                     <div className="mt-6 text-center">
                       <p className="text-sm text-gray-600 mb-2">Métodos de pago aceptados</p>
                       <div className="flex justify-center space-x-2">

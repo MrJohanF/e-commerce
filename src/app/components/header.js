@@ -20,51 +20,57 @@ export default function Header() {
   const [cartCount, setCartCount] = useState(0);
   const [isCartAnimating, setIsCartAnimating] = useState(false);
   const [isIconAnimating, setIsIconAnimating] = useState(false);
+
+  // Refs para controlar la lógica de animación
   const prevCartCountRef = useRef(0);
+  const latestCartRef = useRef([]);
 
   useEffect(() => {
+    // Cargar usuario admin si existe
     const adminUser = localStorage.getItem("adminUser");
     if (adminUser) {
       setUser(JSON.parse(adminUser));
     }
 
+    // Función para cargar el conteo inicial de carrito
     const loadCartCount = () => {
       const cart = JSON.parse(localStorage.getItem("cart")) || [];
-      const totalQuantity = cart.reduce((acc, item) => acc + item.quantity, 0);
+      latestCartRef.current = cart;
+      const totalQuantity = cart.reduce((acc, item) => acc + (item.quantity || 1), 0);
       setCartCount(totalQuantity);
-      prevCartCountRef.current = totalQuantity || 0;
-      //console.log("Cart count loaded:", cart[0].quantity);
+      prevCartCountRef.current = totalQuantity;
     };
     loadCartCount();
 
+    // Listener para el evento "cart-updated"
     const handleCartUpdated = () => {
       const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      latestCartRef.current = cart;
+      const totalQuantity = cart.reduce((acc, item) => acc + (item.quantity || 1), 0);
 
-      const totalQuantity = cart.reduce((acc, item) => acc + item.quantity, 0);
-      
+      // Si el conteo aumentó, disparamos animaciones
       if (totalQuantity > prevCartCountRef.current) {
-        // Trigger both counter and icon animations
         setIsCartAnimating(true);
         setIsIconAnimating(true);
         
-        // Reset counter animation
+        // Apagar la animación del contador
         setTimeout(() => setIsCartAnimating(false), 800);
-        
-        // Reset icon animation slightly later
+        // Apagar la animación del ícono un poco después
         setTimeout(() => setIsIconAnimating(false), 1000);
       }
-      
+
+      // Actualizar estado y referencia
       setCartCount(totalQuantity);
       prevCartCountRef.current = totalQuantity;
     };
 
     window.addEventListener("cart-updated", handleCartUpdated);
-
     return () => {
       window.removeEventListener("cart-updated", handleCartUpdated);
     };
   }, []);
 
+  // Cerrar sesión
   async function handleLogout() {
     try {
       const res = await fetch("/api/auth/logout", { method: "POST" });
@@ -83,9 +89,9 @@ export default function Header() {
 
   return (
     <header className="fixed w-full bg-white/80 backdrop-blur-md z-50 border-b border-gray-100">
-      {/* Rest of the header content remains the same until the cart icon */}
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
+          {/* Logo o nombre de la tienda */}
           <Link
             href="/"
             className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent"
@@ -93,6 +99,7 @@ export default function Header() {
             Tienda Ucompensar
           </Link>
 
+          {/* Navegación (versión de escritorio) */}
           <nav className="hidden md:flex space-x-8">
             {navigationLinks.map((item) => (
               <Link
@@ -105,20 +112,21 @@ export default function Header() {
             ))}
           </nav>
 
+          {/* Iconos lado derecho */}
           <div className="flex items-center space-x-4">
-            {/* Enhanced Cart Icon Animation */}
+            {/* Ícono del carrito con animaciones */}
             <Link 
               href="/cart" 
               prefetch={false}
               className={`relative p-2 rounded-full transition-all duration-300 ${
-                isIconAnimating ? 'bg-purple-100' : 'hover:bg-gray-100'
+                isIconAnimating ? "bg-purple-100" : "hover:bg-gray-100"
               }`}
             >
               <ShoppingCart 
                 className={`w-6 h-6 transition-all duration-300 transform ${
                   isIconAnimating 
-                    ? 'text-purple-600 scale-110 rotate-12' 
-                    : 'text-gray-600'
+                    ? "text-purple-600 scale-110 rotate-12" 
+                    : "text-gray-600"
                 }`}
               />
               {cartCount > 0 && (
@@ -129,11 +137,15 @@ export default function Header() {
                     w-5 h-5 rounded-full 
                     flex items-center justify-center 
                     transition-all duration-800 
-                    ${isCartAnimating ? [
-                      'animate-[bounce_0.5s_cubic-bezier(0.36,0,0.66,-0.56)_2]',
-                      'bg-purple-600 scale-150',
-                      'ring-4 ring-purple-200'
-                    ].join(' ') : 'scale-100'}
+                    ${
+                      isCartAnimating
+                        ? [
+                            "animate-[bounce_0.5s_cubic-bezier(0.36,0,0.66,-0.56)_2]",
+                            "bg-purple-600 scale-150",
+                            "ring-4 ring-purple-200"
+                          ].join(" ")
+                        : "scale-100"
+                    }
                   `}
                 >
                   {cartCount}
@@ -141,8 +153,7 @@ export default function Header() {
               )}
             </Link>
 
-            {/* Rest of the component remains the same */}
-            {/* User Menu */}
+            {/* Menú de usuario (login / logout / dashboard) */}
             {user ? (
               <div className="relative">
                 <button
@@ -188,9 +199,9 @@ export default function Header() {
               </Link>
             )}
 
-            {/* Mobile Menu Button */}
+            {/* Botón de menú para móvil */}
             <button
-              onClick={() => setIsMenuOpen((prev) => !prev)}
+              onClick={() => setIsMenuOpen(prev => !prev)}
               className="md:hidden p-2 hover:bg-gray-100 rounded-full transition-colors"
             >
               {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -199,7 +210,7 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Mobile Navigation */}
+      {/* Navegación móvil */}
       {isMenuOpen && (
         <div className="md:hidden absolute top-16 left-0 w-full bg-white border-b border-gray-100">
           <nav className="container mx-auto px-4 py-4">
