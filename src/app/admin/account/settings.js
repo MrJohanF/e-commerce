@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { User, Camera, Bell, Shield, ChevronRight } from "lucide-react";
+import Toast from "@/app/components/toast";
 
 const AccountSettings = () => {
   const [activeTab, setActiveTab] = useState("profile");
@@ -7,16 +8,24 @@ const AccountSettings = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [toast, setToast] = useState({ show: false, message: "", type: "success" });
 
+  const showToast = (message, type = "success") => {
+    setToast({ show: true, message, type });
+  };
+
+  const hideToast = () => {
+    setToast({ show: false, message: "", type: "success" });
+  };
 
   async function handleChangePassword() {
     // Basic validations
     if (!currentPassword || !newPassword || !confirmPassword) {
-      alert("Por favor, completa todos los campos.");
+      showToast("Por favor, completa todos los campos.", "error");
       return;
     }
     if (newPassword !== confirmPassword) {
-      alert("La nueva contraseña y su confirmación no coinciden.");
+      showToast("La nueva contraseña y su confirmación no coinciden.", "error");
       return;
     }
   
@@ -24,7 +33,7 @@ const AccountSettings = () => {
       // User's ID in localStorage or from your user state
       const adminUser = localStorage.getItem("adminUser");
       if (!adminUser) {
-        alert("No se encontró usuario. Inicia sesión nuevamente.");
+        showToast("No se encontró usuario. Inicia sesión nuevamente.", "error");
         return;
       }
       const userData = JSON.parse(adminUser);
@@ -44,13 +53,13 @@ const AccountSettings = () => {
         const errorData = await res.json();
         throw new Error(errorData.error || "Error al cambiar contraseña");
       }
-      alert("¡Contraseña actualizada exitosamente!");
+      showToast("¡Contraseña actualizada exitosamente!");
       // Optionally, reset form fields
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
     } catch (err) {
-      alert(err.message);
+      showToast(err.message, "error");
       console.error("Error updating password:", err);
     }
   }
@@ -69,6 +78,13 @@ const AccountSettings = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
+                  {toast.show && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={hideToast}
+        />
+      )}
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900 mb-2">
@@ -185,6 +201,7 @@ const AccountSettings = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Contraseña Actual
                     </label>
+                    
                     <input
                       type="password"
                       name="currentPassword"
