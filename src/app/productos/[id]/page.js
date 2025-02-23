@@ -37,7 +37,7 @@ async function getProductData(id) {
 }
 
 export default async function ProductDetailPage({ params }) {
-  const { id } = params;
+  const { id } = await params;
   const product = await getProductData(id);
 
   if (!product) {

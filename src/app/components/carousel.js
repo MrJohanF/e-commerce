@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 
 
+
 const ProductCarousel = () => {
     const [activeSlide, setActiveSlide] = React.useState(0);
     const [products, setProducts] = useState([]);

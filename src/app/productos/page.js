@@ -13,6 +13,7 @@ import {
 import Header from "../components/header";
 import Footer from "../components/footer";
 import ProductFilters from "../components/productfilters";
+import Link from "next/link";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
@@ -152,82 +153,81 @@ export default function ProductsPage() {
 
                 {/* Products Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {products.map((product) => (
-                    <div
-                      key={product.id}
-                      className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow p-4"
-                    >
-                      {/* Product Image */}
-                      <div className="relative h-52 mb-4 flex items-center justify-center bg-gray-50 rounded-xl p-3">
-                        <div className="relative h-full max-w-[70%] flex items-center justify-center">
-                          <img
-                            src={product.imageUrl}
-                            alt={product.name}
-                            className="h-full object-contain"
-                          />
-                        </div>
-                        <button className="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm hover:bg-gray-50 transition-colors">
-                          <Heart className="w-4 h-4 text-gray-700" />
-                        </button>
-                      </div>
+                  {products.map((product) => (               
+                
 
-                      {/* Product Info */}
-                      <div>
-                        <div className="flex items-start justify-between mb-1">
-                          <h3 className="font-semibold text-lg text-gray-800 line-clamp-2">
-                            {product.name}
-                          </h3>
-                          <span className="text-xs font-medium bg-blue-50 text-blue-600 px-2 py-1 rounded-full whitespace-nowrap ml-2">
-                            {product.category}
-                          </span>
-                        </div>
-                        <div className="flex items-center mb-3">
-                          <div className="flex items-center">
-                            {Array(5)
-                              .fill(null)
-                              .map((_, i) => (
-                                <Star
-                                  key={i}
-                                  className="w-4 h-4 text-yellow-400"
-                                  fill={
-                                    i < Math.floor(4.5)
-                                      ? "currentColor"
-                                      : "none"
-                                  }
-                                />
-                              ))}
-                          </div>
-                          <span className="text-sm text-gray-600 ml-2">
-                            (4.5)
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="text-xl font-bold text-purple-600">
-                              $
-                              {typeof product.price === "number"
-                                ? product.price.toFixed(2)
-                                : product.price}
-                            </p>
-                            {product.stock > 0 ? (
-                              <p className="text-xs text-green-600">
-                                {product.stock} in stock
-                              </p>
-                            ) : (
-                              <p className="text-xs text-red-600">
-                                Out of stock
-                              </p>
-                            )}
-                          </div>
-                          <button
-                            onClick={() => handleAddToCart(product)}
-                            className="p-2.5 rounded-xl bg-purple-100 text-purple-600 hover:bg-purple-200 transition-colors"
-                          >
-                            <ShoppingCart className="w-5 h-5" />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
+                 <div
+                   key={product.id}
+                   className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow p-4"
+                 >
+                   <Link href={`/productos/${product.id}`} className="block">
+                     {/* Product Image */}
+                     <div className="relative h-52 mb-4 flex items-center justify-center bg-gray-50 rounded-xl p-3">
+                       <div className="relative h-full max-w-[70%] flex items-center justify-center">
+                         <img
+                           src={product.imageUrl}
+                           alt={product.name}
+                           className="h-full object-contain"
+                         />
+                       </div>
+                       <button
+                         className="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm hover:bg-gray-50 transition-colors"
+                       >
+                         <Heart className="w-4 h-4 text-gray-700" />
+                       </button>
+                     </div>
+                 
+                     {/* Product Info */}
+                     <div>
+                       <div className="flex items-start justify-between mb-1">
+                         <h3 className="font-semibold text-lg text-gray-800 line-clamp-2">
+                           {product.name}
+                         </h3>
+                         <span className="text-xs font-medium bg-blue-50 text-blue-600 px-2 py-1 rounded-full whitespace-nowrap ml-2">
+                           {product.category}
+                         </span>
+                       </div>
+                       <div className="flex items-center mb-3">
+                         <div className="flex items-center">
+                           {Array(5)
+                             .fill(null)
+                             .map((_, i) => (
+                               <Star
+                                 key={i}
+                                 className="w-4 h-4 text-yellow-400"
+                                 fill={i < Math.floor(4.5) ? "currentColor" : "none"}
+                               />
+                             ))}
+                         </div>
+                         <span className="text-sm text-gray-600 ml-2">(4.5)</span>
+                       </div>
+                       <div className="flex items-center justify-between">
+                         <div>
+                           <p className="text-xl font-bold text-purple-600">
+                             $
+                             {typeof product.price === "number"
+                               ? product.price.toFixed(2)
+                               : product.price}
+                           </p>
+                           {product.stock > 0 ? (
+                             <p className="text-xs text-green-600">{product.stock} in stock</p>
+                           ) : (
+                             <p className="text-xs text-red-600">Out of stock</p>
+                           )}
+                         </div>
+                       </div>
+                     </div>
+                   </Link>
+                 
+                   {/* Keep the "Add to Cart" button outside the Link to prevent navigation */}
+                   <button
+                     onClick={() => handleAddToCart(product)}
+                     className="p-2.5 rounded-xl bg-purple-100 text-purple-600 hover:bg-purple-200 transition-colors"
+                   >
+                     <ShoppingCart className="w-5 h-5" />
+                   </button>
+                 </div>
+                 
                   ))}
                 </div>
 
