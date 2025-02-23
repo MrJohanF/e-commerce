@@ -1,17 +1,18 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { 
-  Search, 
-  SlidersHorizontal, 
-  X, 
-  ChevronDown, 
-  Star, 
-  ShoppingCart, 
-  Heart 
+import {
+  Search,
+  SlidersHorizontal,
+  X,
+  ChevronDown,
+  Star,
+  ShoppingCart,
+  Heart,
 } from "lucide-react";
 import Header from "../components/header";
 import Footer from "../components/footer";
+import ProductFilters from "../components/productfilters";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
@@ -30,12 +31,14 @@ export default function ProductsPage() {
     const fetchProducts = async () => {
       try {
         // Pass page and limit as query params
-        const res = await fetch(`/api/products?page=${currentPage}&limit=${limit}`);
+        const res = await fetch(
+          `/api/products?page=${currentPage}&limit=${limit}`
+        );
         if (!res.ok) {
           throw new Error("Error fetching products");
         }
         const data = await res.json();
-        
+
         // data should include { products, totalPages }
         setProducts(data.products);
         setTotalPages(data.totalPages);
@@ -43,7 +46,7 @@ export default function ProductsPage() {
         console.error("Error fetching products:", error);
       }
     };
-    
+
     fetchProducts();
   }, [currentPage, limit]);
 
@@ -51,20 +54,22 @@ export default function ProductsPage() {
   const handleAddToCart = (product) => {
     try {
       let currentCart = JSON.parse(localStorage.getItem("cart")) || [];
-  
+
       // Attempt to find an existing item with the same id
-      const existingIndex = currentCart.findIndex((item) => item.id === product.id);
-  
+      const existingIndex = currentCart.findIndex(
+        (item) => item.id === product.id
+      );
+
       if (existingIndex >= 0) {
         // If the item is already in the cart, just increment its quantity
-        currentCart[existingIndex].quantity = (currentCart[existingIndex].quantity || 1) + 1;
+        currentCart[existingIndex].quantity =
+          (currentCart[existingIndex].quantity || 1) + 1;
       } else {
         // Otherwise, push a new entry with quantity = 1
         currentCart.push({ ...product, quantity: 1 });
       }
       localStorage.setItem("cart", JSON.stringify(currentCart));
       window.dispatchEvent(new Event("cart-updated"));
-  
     } catch (err) {
       console.error("Error adding item to cart:", err);
     }
@@ -89,7 +94,8 @@ export default function ProductsPage() {
               <h1 className="text-4xl md:text-5xl font-bold mb-6 text-gray-800">
                 Descubre Nuestra
                 <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                  {" "}Colección
+                  {" "}
+                  Colección
                 </span>
               </h1>
               <p className="text-xl text-gray-700 mb-8">
@@ -116,80 +122,13 @@ export default function ProductsPage() {
             <div className="flex flex-col md:flex-row gap-8">
               {/* Filters - Desktop */}
               <div className="hidden md:block w-64 flex-shrink-0">
-                <div className="bg-white rounded-2xl shadow-sm p-6 sticky top-4">
-                  <h2 className="text-xl font-bold mb-6 text-gray-800">Filtros</h2>
-                  {/* Categories */}
-                  <div className="mb-8">
-                    <h3 className="font-medium mb-4 text-gray-800">Categorías</h3>
-                    <div className="space-y-3">
-                      {["all", "smartphones", "laptops"].map((category) => (
-                        <label key={category} className="flex items-center">
-                          <input
-                            type="radio"
-                            name="category"
-                            className="w-4 h-4 text-purple-600"
-                            checked={selectedCategory === category}
-                            onChange={() => setSelectedCategory(category)}
-                          />
-                          <span className="ml-3 text-gray-700">
-                            {category.charAt(0).toUpperCase() + category.slice(1)}
-                          </span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Price Range */}
-                  <div className="mb-8">
-                    <h3 className="font-medium mb-4 text-gray-800">Precio</h3>
-                    <div className="space-y-4">
-                      <input
-                        type="range"
-                        min="0"
-                        max="1000"
-                        value={priceRange[1]}
-                        onChange={(e) =>
-                          setPriceRange([priceRange[0], parseInt(e.target.value)])
-                        }
-                        className="w-full"
-                      />
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-700">${priceRange[0]}</span>
-                        <span className="text-sm text-gray-700">${priceRange[1]}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Ratings */}
-                  <div className="mb-8">
-                    <h3 className="font-medium mb-4 text-gray-800">Valoración</h3>
-                    <div className="space-y-3">
-                      {[5, 4, 3, 2, 1].map((rating) => (
-                        <label key={rating} className="flex items-center">
-                          <input
-                            type="checkbox"
-                            className="w-4 h-4 text-purple-600 rounded"
-                          />
-                          <span className="ml-3 flex items-center text-gray-700">
-                            {Array(rating)
-                              .fill(null)
-                              .map((_, i) => (
-                                <Star
-                                  key={i}
-                                  className="w-4 h-4 fill-current text-yellow-400"
-                                />
-                              ))}
-                            <span className="ml-2">y más</span>
-                          </span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-
-                  <button className="w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
-                    Aplicar Filtros
-                  </button>
-                </div>
+{/* Replace your current filters section with this */}
+<ProductFilters 
+  selectedCategory={selectedCategory}
+  setSelectedCategory={setSelectedCategory}
+  priceRange={priceRange}
+  setPriceRange={setPriceRange}
+/>
               </div>
 
               {/* Mobile Filters Button */}
@@ -206,7 +145,9 @@ export default function ProductsPage() {
                   <div className="absolute inset-y-0 right-0 w-80 bg-white">
                     <div className="p-6">
                       <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-xl font-bold text-gray-800">Filtros</h2>
+                        <h2 className="text-xl font-bold text-gray-800">
+                          Filtros
+                        </h2>
                         <button onClick={() => setIsFilterOpen(false)}>
                           <X className="w-6 h-6" />
                         </button>
@@ -222,7 +163,8 @@ export default function ProductsPage() {
                 {/* Sort Options */}
                 <div className="flex justify-between items-center mb-8">
                   <p className="text-gray-700">
-                    Mostrando {products.length} productos (página {currentPage} de {totalPages})
+                    Mostrando {products.length} productos (página {currentPage}{" "}
+                    de {totalPages})
                   </p>
                   <div className="relative">
                     <select className="appearance-none bg-white border border-gray-200 rounded-lg px-4 py-2 pr-8 text-gray-700">
@@ -268,15 +210,23 @@ export default function ProductsPage() {
                         </div>
                         <div className="flex items-center mb-3">
                           <div className="flex items-center">
-                            {Array(5).fill(null).map((_, i) => (
-                              <Star
-                                key={i}
-                                className="w-4 h-4 text-yellow-400"
-                                fill={i < Math.floor(4.5) ? "currentColor" : "none"}
-                              />
-                            ))}
+                            {Array(5)
+                              .fill(null)
+                              .map((_, i) => (
+                                <Star
+                                  key={i}
+                                  className="w-4 h-4 text-yellow-400"
+                                  fill={
+                                    i < Math.floor(4.5)
+                                      ? "currentColor"
+                                      : "none"
+                                  }
+                                />
+                              ))}
                           </div>
-                          <span className="text-sm text-gray-600 ml-2">(4.5)</span>
+                          <span className="text-sm text-gray-600 ml-2">
+                            (4.5)
+                          </span>
                         </div>
                         <div className="flex items-center justify-between">
                           <div>
@@ -291,7 +241,9 @@ export default function ProductsPage() {
                                 {product.stock} in stock
                               </p>
                             ) : (
-                              <p className="text-xs text-red-600">Out of stock</p>
+                              <p className="text-xs text-red-600">
+                                Out of stock
+                              </p>
                             )}
                           </div>
                           <button
@@ -323,19 +275,21 @@ export default function ProductsPage() {
                     </button>
 
                     {/* Dynamically render page buttons (simple version) */}
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
-                      <button
-                        key={pageNumber}
-                        onClick={() => handlePageChange(pageNumber)}
-                        className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                          pageNumber === currentPage
-                            ? "bg-purple-600 text-white"
-                            : "bg-white text-gray-700 hover:bg-purple-50"
-                        }`}
-                      >
-                        {pageNumber}
-                      </button>
-                    ))}
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                      (pageNumber) => (
+                        <button
+                          key={pageNumber}
+                          onClick={() => handlePageChange(pageNumber)}
+                          className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                            pageNumber === currentPage
+                              ? "bg-purple-600 text-white"
+                              : "bg-white text-gray-700 hover:bg-purple-50"
+                          }`}
+                        >
+                          {pageNumber}
+                        </button>
+                      )
+                    )}
 
                     {/* Next Page */}
                     <button
