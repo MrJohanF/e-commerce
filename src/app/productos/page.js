@@ -18,7 +18,6 @@ export default function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1); // Keep track of how many pages we have
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -120,43 +119,17 @@ export default function ProductsPage() {
         <section className="py-12 bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="flex flex-col md:flex-row gap-8">
-              {/* Filters - Desktop */}
-              <div className="hidden md:block w-64 flex-shrink-0">
-{/* Replace your current filters section with this */}
-<ProductFilters 
-  selectedCategory={selectedCategory}
-  setSelectedCategory={setSelectedCategory}
-  priceRange={priceRange}
-  setPriceRange={setPriceRange}
-/>
-              </div>
 
-              {/* Mobile Filters Button */}
-              <button
-                className="md:hidden fixed bottom-4 right-4 z-50 bg-purple-600 text-white p-4 rounded-full shadow-lg"
-                onClick={() => setIsFilterOpen(true)}
-              >
-                <SlidersHorizontal className="w-6 h-6" />
-              </button>
 
-              {/* Mobile Filters Modal */}
-              {isFilterOpen && (
-                <div className="fixed inset-0 z-50 bg-black bg-opacity-50 md:hidden">
-                  <div className="absolute inset-y-0 right-0 w-80 bg-white">
-                    <div className="p-6">
-                      <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-xl font-bold text-gray-800">
-                          Filtros
-                        </h2>
-                        <button onClick={() => setIsFilterOpen(false)}>
-                          <X className="w-6 h-6" />
-                        </button>
-                      </div>
-                      {/* Add your mobile filters content here */}
-                    </div>
-                  </div>
-                </div>
-              )}
+                {/* Filters}*/}
+                
+                <ProductFilters
+                  selectedCategory={selectedCategory}
+                  setSelectedCategory={setSelectedCategory}
+                  priceRange={priceRange}
+                  setPriceRange={setPriceRange}
+                />
+            
 
               {/* Products Grid */}
               <div className="flex-1">
