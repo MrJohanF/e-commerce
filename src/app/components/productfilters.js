@@ -25,17 +25,8 @@ const FilterContent = ({
         </div>
       )}
 
-      <div className={`${isMobile ? 'p-4' : ''}`}>
-        {/* Search Bar */}
-        <div className="relative mb-4">
-          <input
-            type="text"
-            placeholder="Search products..."
-            className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-purple-600 focus:border-transparent pl-9 text-sm"
-          />
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-        </div>
 
+      <div className={`${isMobile ? 'p-4' : ''}`}>
         {!isMobile && (
           <div className="border-b border-gray-100 pb-2 mb-4">
             <h2 className="text-lg font-bold text-gray-800">Filters</h2>
