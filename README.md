@@ -71,52 +71,78 @@ npm run dev
 ## 🏗️ Project Structure
 
 ```
-├── prisma/
-│   ├── schema.prisma
-│   └── seed.js
-├── public/
-├── src/
-│   ├── app/
-│   │   ├── admin/
-│   │   │   ├── account/
-│   │   │   │   └── settings.js
-│   │   │   ├── login/
-│   │   │   │   └── page.js
-│   │   │   ├── products/
-│   │   │   │   └── page.js
-│   │   ├── api/
-│   │   │   ├── admin/
-│   │   │   │   └── create/
-│   │   │   │       └── route.js
-│   │   │   ├── auth/
-│   │   │   ├── products/
-│   │   │   │   └── [id]/
-│   │   │   │       └── route.js
-│   │   ├── careers/
-│   │   │   ├── new/
-│   │   │   │   └── page.js
-│   │   ├── components/
-│   │   │   ├── header.js
-│   │   │   └── navbar.js
-│   │   ├── contactanos/
-│   │   │   └── page.js
-│   │   ├── lib/
-│   │   │   ├── auth.js
-│   │   │   ├── jwt.js
-│   │   │   └── prisma.js
-│   │   ├── nosotros/
-│   │   │   └── page.js
-│   │   ├── productos/
-│   │   │   └── page.js
-│   │   │
-│   │   ├── favicon.ico
-│   │   ├── globals.css
-│   │   ├── layout.js
-│   │   ├── middleware.js
-│   │   └── page.js
-│   │     
-│   └── ...
-└── ...
+# src
+
+src/
+┣ app/
+┃ ┣ admin/
+┃ ┃ ┣ account/
+┃ ┃ ┃ ┗ settings.js
+┃ ┃ ┣ dashboard/
+┃ ┃ ┃ ┗ page.js
+┃ ┃ ┣ login/
+┃ ┃ ┃ ┗ page.js
+┃ ┃ ┗ products/
+┃ ┃   ┣ edit-product/
+┃ ┃   ┃ ┗ [id]/
+┃ ┃   ┣ list.js
+┃ ┃   ┗ page.js
+┃ ┣ api/
+┃ ┃ ┣ admin/
+┃ ┃ ┃ ┗ create/
+┃ ┃ ┃   ┗ route.js
+┃ ┃ ┣ auth/
+┃ ┃ ┃ ┣ login/
+┃ ┃ ┃ ┃ ┗ route.js
+┃ ┃ ┃ ┣ logout/
+┃ ┃ ┃ ┃ ┗ route.js
+┃ ┃ ┃ ┗ register/
+┃ ┃ ┃   ┗ route.js
+┃ ┃ ┣ products/
+┃ ┃ ┃ ┣ create/
+┃ ┃ ┃ ┃ ┗ route.js
+┃ ┃ ┃ ┣ [id]/
+┃ ┃ ┃ ┃ ┗ route.js
+┃ ┃ ┃ ┗ route.js
+┃ ┃ ┗ user/
+┃ ┃   ┣ change-password/
+┃ ┃   ┃ ┗ route.js
+┃ ┃   ┗ update-profile/
+┃ ┃     ┗ route.js
+┃ ┣ careers/
+┃ ┃ ┣ new/
+┃ ┃ ┗ page.js
+┃ ┣ cart/
+┃ ┃ ┗ page.js
+┃ ┣ components/
+┃ ┃ ┣ backtohome.js
+┃ ┃ ┣ carousel.js
+┃ ┃ ┣ features.js
+┃ ┃ ┣ footer.js
+┃ ┃ ┣ header.js
+┃ ┃ ┣ hero.js
+┃ ┃ ┣ navbar.js
+┃ ┃ ┣ newsletter.js
+┃ ┃ ┣ productfilters.js
+┃ ┃ ┗ toast.js
+┃ ┣ contactanos/
+┃ ┃ ┗ page.js
+┃ ┣ lib/
+┃ ┃ ┣ auth.js
+┃ ┃ ┣ jose.js
+┃ ┃ ┗ prisma.js
+┃ ┣ nosotros/
+┃ ┃ ┗ page.js
+┃ ┣ productos/
+┃ ┃ ┣ [id]/
+┃ ┃ ┃ ┣ page.js
+┃ ┃ ┃ ┗ productclient.js
+┃ ┃ ┗ page.js
+┃ ┣ favicon.ico
+┃ ┣ globals.css
+┃ ┣ layout.js
+┃ ┗ page.js
+┗ middleware.js
 
 ```
 
