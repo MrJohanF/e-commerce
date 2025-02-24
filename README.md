@@ -33,8 +33,8 @@ A secure E-commerce Ucompensar with authentication system built with Next.js, Pr
 
 1. Clone the repository:
 ```bash
-git clone <your-repo-url>
-cd <your-project-name>
+git clone https://github.com/MrJohanF/e-commerce
+cd e-commerce
 ```
 
 2. Install dependencies:
