@@ -9,7 +9,7 @@ async function main() {
     // Datos del admin por defecto
     const adminData = {
       email: 'admin@tiendaucompensar.com',
-      password: 'Admin123',
+      password: 'Admin',
       name: 'Administrador',
       role: 'ADMIN'
     }
