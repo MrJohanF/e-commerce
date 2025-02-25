@@ -22,7 +22,7 @@ const AdminLogin = () => {
     setError("");
 
     try {
-      const response = await fetch("https://mrjohanf-d75bb092cdb4.herokuapp.com/api/auth/login/login.js", {
+      const response = await fetch("https://mrjohanf-d75bb092cdb4.herokuapp.com/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
