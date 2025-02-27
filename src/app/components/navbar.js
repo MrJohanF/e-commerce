@@ -24,16 +24,7 @@ const Navbar = ({ onViewChange, activeView }) => {
 
   async function handleLogout() {
     try {
-      const res = await fetch("https://api.ucommerce.live/api/auth/logout", {
-        method: "POST",          // Change to POST here as well
-        credentials: "include",
-      });
-      if (res.ok) {
-        console.log("Logout successful");
-        await logout();
-      } else {
-        console.error("Error in logout");
-      }
+      await logout();
     } catch (error) {
       console.error("Logout error:", error);
     }
