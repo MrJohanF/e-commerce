@@ -24,7 +24,6 @@ const AdminLogin = () => {
     }
   }, [user, router]);
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
