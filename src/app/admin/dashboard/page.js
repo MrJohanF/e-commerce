@@ -17,11 +17,11 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     if (!loading && !user) {
-      router.push('/login');
+      router.push('admin/login');
     }
     
     if (user && user.role !== 'ADMIN') {
-      router.push('/login');
+      router.push('admin/login');
     }
   }, [user, loading, router]);
 
