@@ -20,7 +20,7 @@ const Navbar = ({ onViewChange, activeView }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
-  const { user, loading } = useAuth();
+  const { user, loading } = AuthProvider();
 
   async function handleLogout() {
     try {
