@@ -7,7 +7,7 @@ import Navbar from "../../components/navbar";
 import AddProductDashboard from "../products/page";
 import ProductsList from "../products/list";
 import AccountSettings from "../account/settings"; 
-import { useAuth } from '../AuthContext';
+import { useAuth } from '../../authContext';
 import { useRouter } from 'next/navigation';
 
 const AdminDashboard = () => {
