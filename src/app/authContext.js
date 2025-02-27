@@ -48,7 +48,7 @@ const logout = async () => {
     });
     
     setUser(null);
-    router.push("/login");
+    router.push("admin/login");
   } catch (error) {
     console.error("Logout error", error);
   }
