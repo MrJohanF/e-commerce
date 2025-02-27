@@ -82,10 +82,12 @@ export default function Header() {
         console.log("Logout successful");
       } else {
         console.error("Error in logout");
+        console.log("Error in logout");
       }
     } catch (error) {
       console.error("Logout error:", error);
     }
+    console.log("Logout executed");
   }
   
 
