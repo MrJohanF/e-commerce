@@ -3,34 +3,31 @@ import { NextResponse } from 'next/server';
 import { verifyToken } from './app/lib/jose';
 
 export async function middleware(request) {
-  // Ejemplo: proteger rutas que empiezan con /admin
+  // Proteger rutas que empiezan con /admin
   if (request.nextUrl.pathname.startsWith('/admin')) {
     // Excluir la página de login
     if (request.nextUrl.pathname === '/admin/login') {
       return NextResponse.next();
     }
 
-    // Tomar el token de la cookie o del header (authorization)
-    const token = request.cookies.get('adminToken')?.value 
+    // Obtener el token de la cookie (nombre actualizado a "token") o del header (Authorization)
+    const token = request.cookies.get('token')?.value 
                || request.headers.get('authorization')?.split(' ')[1];
 
-    // Si no existe token => redirección
+    // Si no existe token, redirigir a login
     if (!token) {
       return NextResponse.redirect(new URL('/admin/login', request.url));
     }
 
-    // Importante: 'verifyToken' es asíncrono
-    //console.log('Middleware => JOSE_SECRET:', process.env.JWT_SECRET);
-
+    // Verificar el token de manera asíncrona
     const payload = await verifyToken(token);
-    //console.log('Middleware => Payload:', payload);
 
-    // Si el payload es null (token inválido) o el rol no es ADMIN => redirige
+    // Si el token es inválido o el rol no es ADMIN, redirigir
     if (!payload || payload.role !== 'ADMIN') {
       return NextResponse.redirect(new URL('/admin/login', request.url));
     }
 
-    // Dejar pasar
+    // Permitir el acceso
     return NextResponse.next();
   }
 
