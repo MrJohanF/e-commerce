@@ -22,18 +22,17 @@ const Navbar = ({ onViewChange, activeView }) => {
 
   async function handleLogout() {
     try {
-      const res = await fetch("/api/auth/logout", {
-        method: "POST",
+      const res = await fetch("https://api.ucommerce.live/api/auth/logout", {
+        method: "POST",          // Change to POST here as well
+        credentials: "include",
       });
       if (res.ok) {
-        // Limpiamos la información guardada y redirigimos
-        localStorage.removeItem("adminUser");
         router.push("/admin/login");
       } else {
-        console.error("Error en logout");
+        console.error("Error in logout");
       }
     } catch (error) {
-      console.error("Error en logout:", error);
+      console.error("Logout error:", error);
     }
   }
 
