@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import { AuthProvider } from "../authContext";
 import { useRouter } from "next/navigation";
 import {
   Menu,
@@ -19,6 +20,7 @@ const Navbar = ({ onViewChange, activeView }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const { user, loading } = useAuth();
 
   async function handleLogout() {
     try {
@@ -28,6 +30,7 @@ const Navbar = ({ onViewChange, activeView }) => {
       });
       if (res.ok) {
         console.log("Logout successful");
+        user.logout();
         router.push("/admin/dashboard");
       } else {
         console.error("Error in logout");
