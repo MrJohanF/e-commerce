@@ -1,3 +1,5 @@
+// src\app\admin\account\settings.js
+
 import React, { useState, useEffect } from "react";
 import { User, Camera, Bell, Shield, ChevronRight } from "lucide-react";
 import Toast from "@/app/components/toast";
