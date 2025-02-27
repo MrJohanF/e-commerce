@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import { Mail, Lock, AlertCircle, Eye, EyeOff, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import BackToHome from "../../components/backtohome.js";
+import { useAuth } from "@/app/authContext.js";
 
 const AdminLogin = () => {
   const router = useRouter();
@@ -15,6 +16,7 @@ const AdminLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const { user, refreshAuth } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,7 +24,7 @@ const AdminLogin = () => {
     setError("");
 
     try {
-      const response = await fetch("/api/auth/login", {
+      const response = await fetch("https://api.ucommerce.live/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -44,12 +46,6 @@ const AdminLogin = () => {
         );
       }
 
-      // Guardar el token
-      if (rememberMe) {
-        localStorage.setItem("adminToken", data.token);
-      } else {
-        sessionStorage.setItem("adminToken", data.token);
-      }
 
       // Guardar información básica del usuario
       const userData = {
