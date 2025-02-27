@@ -6,7 +6,7 @@ import React, { useState, useEffect } from "react";
 import { Mail, Lock, AlertCircle, Eye, EyeOff, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import BackToHome from "../../components/backtohome.js";
-import { useAuth } from "../../authContext.js";
+import { useAuth } from "../../../authContext.js";
 
 const AdminLogin = () => {
   const router = useRouter();
