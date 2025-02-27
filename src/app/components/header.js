@@ -79,6 +79,7 @@ export default function Header() {
       });
       if (res.ok) {
         router.push("/admin/login");
+        console.log("Logout successful");
       } else {
         console.error("Error in logout");
       }
