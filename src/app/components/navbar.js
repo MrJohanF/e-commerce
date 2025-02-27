@@ -31,7 +31,6 @@ const Navbar = ({ onViewChange, activeView }) => {
       if (res.ok) {
         console.log("Logout successful");
         user.logout();
-        router.push("/admin/dashboard");
       } else {
         console.error("Error in logout");
       }
