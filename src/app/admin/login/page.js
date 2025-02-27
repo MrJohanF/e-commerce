@@ -15,8 +15,15 @@ const AdminLogin = () => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
   const { user, refreshAuth } = useAuth();
+
+
+  useEffect(() => {
+    if (user) {
+      router.push('/admin/dashboard');
+    }
+  }, [user, router]);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,7 +36,7 @@ const AdminLogin = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include",
+        credentials: "include", // Important for cookies
         body: JSON.stringify({ email, password }),
       });
 
@@ -46,16 +53,8 @@ const AdminLogin = () => {
         );
       }
 
-
-      // Guardar información básica del usuario
-      const userData = {
-        id: data.user.id,
-        email: data.user.email,
-        name: data.user.name,
-        role: data.user.role,
-      };
-
-      localStorage.setItem("adminUser", JSON.stringify(userData));
+      // Refresh authentication state
+      await refreshAuth();
 
       // Redireccionar al dashboard
       router.push("/admin/dashboard");
