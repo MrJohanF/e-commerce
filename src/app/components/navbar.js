@@ -27,8 +27,8 @@ const Navbar = ({ onViewChange, activeView }) => {
         credentials: "include",
       });
       if (res.ok) {
-        router.push("/admin/login");
         console.log("Logout successful");
+        router.push("/admin/login");
       } else {
         console.error("Error in logout");
       }
