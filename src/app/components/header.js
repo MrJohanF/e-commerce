@@ -73,9 +73,8 @@ export default function Header() {
   // Cerrar sesión
   async function handleLogout() {
     try {
-      const res = await fetch("/api/auth/logout", { method: "POST" });
+      const res = await fetch("https://api.ucommerce.live/api/auth/logout", { method: "GET" });
       if (res.ok) {
-        localStorage.removeItem("adminUser");
         router.push("/admin/login");
       } else {
         console.error("Error en logout");
