@@ -73,16 +73,20 @@ export default function Header() {
   // Cerrar sesión
   async function handleLogout() {
     try {
-      const res = await fetch("https://api.ucommerce.live/api/auth/logout", { method: "GET", credentials: "include" });
+      const res = await fetch("https://api.ucommerce.live/api/auth/logout", {
+        method: "POST",          // Change to POST here as well
+        credentials: "include",
+      });
       if (res.ok) {
         router.push("/admin/login");
       } else {
-        console.error("Error en logout");
+        console.error("Error in logout");
       }
     } catch (error) {
-      console.error("Error en logout:", error);
+      console.error("Logout error:", error);
     }
   }
+  
 
   const navigationLinks = ["Inicio", "Productos", "Nosotros", "Contactanos"];
 

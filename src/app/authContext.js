@@ -37,21 +37,21 @@ export const AuthProvider = ({ children }) => {
     checkAuth();
   }, []);
 
-  // Logout function
-  const logout = async () => {
-    try {
-      // Call logout endpoint
-      await fetch("https://api.ucommerce.live/api/auth/logout", {
-        method: "POST",
-        credentials: "include", // Important for cookies
-      });
-      
-      setUser(null);
-      router.push("/login");
-    } catch (error) {
-      console.error("Logout error", error);
-    }
-  };
+// Logout function inside your AuthProvider
+const logout = async () => {
+  try {
+    await fetch("https://api.ucommerce.live/api/auth/logout", {
+      method: "POST",          // Use POST consistently
+      credentials: "include",  // Ensure cookies are included
+    });
+    
+    setUser(null);
+    router.push("/login");
+  } catch (error) {
+    console.error("Logout error", error);
+  }
+};
+
 
   return (
     <AuthContext.Provider value={{ user, loading, logout, refreshAuth: checkAuth }}>
