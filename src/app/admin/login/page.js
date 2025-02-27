@@ -36,14 +36,14 @@ const AdminLogin = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // Important for cookies
+        credentials: "include",
         body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Error al iniciar sesión");
+        throw new Error(data.message || "Error al iniciar sesión");
       }
 
       // Verificar si el usuario es admin
