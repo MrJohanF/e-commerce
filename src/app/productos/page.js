@@ -160,7 +160,7 @@ export default function ProductsPage() {
                    key={product.id}
                    className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow p-4"
                  >
-                   <Link href={`/productos/${product.id}`} className="block">
+                   <Link href={`/api/productos/${product.id}`} className="block">
                      {/* Product Image */}
                      <div className="relative h-52 mb-4 flex items-center justify-center bg-gray-50 rounded-xl p-3">
                        <div className="relative h-full max-w-[70%] flex items-center justify-center">
