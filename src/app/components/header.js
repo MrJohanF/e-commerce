@@ -3,14 +3,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  ShoppingCart,
-  Menu,
-  X,
-  User,
-  LogOut,
-  ChevronDown,
-} from "lucide-react";
+import { ShoppingCart, Menu, X, User, LogOut, ChevronDown } from "lucide-react";
 
 export default function Header() {
   const router = useRouter();
@@ -36,7 +29,10 @@ export default function Header() {
     const loadCartCount = () => {
       const cart = JSON.parse(localStorage.getItem("cart")) || [];
       latestCartRef.current = cart;
-      const totalQuantity = cart.reduce((acc, item) => acc + (item.quantity || 1), 0);
+      const totalQuantity = cart.reduce(
+        (acc, item) => acc + (item.quantity || 1),
+        0
+      );
       setCartCount(totalQuantity);
       prevCartCountRef.current = totalQuantity;
     };
@@ -46,13 +42,16 @@ export default function Header() {
     const handleCartUpdated = () => {
       const cart = JSON.parse(localStorage.getItem("cart")) || [];
       latestCartRef.current = cart;
-      const totalQuantity = cart.reduce((acc, item) => acc + (item.quantity || 1), 0);
+      const totalQuantity = cart.reduce(
+        (acc, item) => acc + (item.quantity || 1),
+        0
+      );
 
       // Si el conteo aumentó, disparamos animaciones
       if (totalQuantity > prevCartCountRef.current) {
         setIsCartAnimating(true);
         setIsIconAnimating(true);
-        
+
         // Apagar la animación del contador
         setTimeout(() => setIsCartAnimating(false), 800);
         // Apagar la animación del ícono un poco después
@@ -115,22 +114,22 @@ export default function Header() {
           {/* Iconos lado derecho */}
           <div className="flex items-center space-x-4">
             {/* Ícono del carrito con animaciones */}
-            <Link 
-              href="/cart" 
+            <Link
+              href="/cart"
               prefetch={false}
               className={`relative p-2 rounded-full transition-all duration-300 ${
                 isIconAnimating ? "bg-purple-100" : "hover:bg-gray-100"
               }`}
             >
-              <ShoppingCart 
+              <ShoppingCart
                 className={`w-6 h-6 transition-all duration-300 transform ${
-                  isIconAnimating 
-                    ? "text-purple-600 scale-110 rotate-12" 
+                  isIconAnimating
+                    ? "text-purple-600 scale-110 rotate-12"
                     : "text-gray-600"
                 }`}
               />
               {cartCount > 0 && (
-                <span 
+                <span
                   className={`
                     absolute -top-1.5 -right-1.5 
                     bg-red-600 text-white text-xs 
@@ -142,7 +141,7 @@ export default function Header() {
                         ? [
                             "animate-[bounce_0.5s_cubic-bezier(0.36,0,0.66,-0.56)_2]",
                             "bg-purple-600 scale-150",
-                            "ring-4 ring-purple-200"
+                            "ring-4 ring-purple-200",
                           ].join(" ")
                         : "scale-100"
                     }
@@ -201,10 +200,14 @@ export default function Header() {
 
             {/* Botón de menú para móvil */}
             <button
-              onClick={() => setIsMenuOpen(prev => !prev)}
+              onClick={() => setIsMenuOpen((prev) => !prev)}
               className="md:hidden p-2 hover:bg-gray-100 rounded-full transition-colors"
             >
-              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {isMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
             </button>
           </div>
         </div>
