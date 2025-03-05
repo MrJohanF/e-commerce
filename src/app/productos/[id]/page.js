@@ -4,7 +4,7 @@ import Footer from "@/app/components/footer";
 import ProductClient from "./productclient"; // the child client component
 
 async function getProductData(id) {
-  const res = await fetch(`http://localhost:3000/api/products/${id}`, {
+  const res = await fetch(`/api/products/${id}`, {
     cache: "no-store",
   });
   if (!res.ok) return null;
