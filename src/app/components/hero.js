@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { ChevronRight } from 'lucide-react';
+import Link from "next/link";
+import { ChevronRight } from "lucide-react";
 
 const HeroSection = () => {
   return (
@@ -12,7 +12,8 @@ const HeroSection = () => {
             <h1 className="text-4xl md:text-6xl text-gray-600 font-bold leading-tight mb-6">
               Transforma tu
               <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                {' '}Experiencia Digital
+                {" "}
+                Experiencia Digital
               </span>
             </h1>
             <p className="text-lg text-gray-600 mb-8 max-w-xl">
