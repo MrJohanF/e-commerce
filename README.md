@@ -153,8 +153,8 @@ src/
 #### POST /api/auth/login
 ```json
 {
-  "email": "admin@ejemplo.com",
-  "password": "yourpassword"
+  "email": "admin@tiendaucompensar.com",
+  "password": "Admin"
 }
 ```
 
@@ -206,6 +206,7 @@ Required environment variables:
 ```env
 DATABASE_URL=           # Your MySQL connection string
 JWT_SECRET=            # Your JWT secret key
+NEXT_PUBLIC_API_URL=   # Host Base name Example: http://localhost:3000 
 ```
 
 ## 🛡️ Middleware Protection
