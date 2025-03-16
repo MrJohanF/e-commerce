@@ -4,7 +4,9 @@ import Footer from "@/app/components/footer";
 import ProductClient from "./productclient"; // the child client component
 
 async function getProductData(id) {
-  const res = await fetch(`/api/products/${id}`, {
+  // Get the base URL from environment or use a default
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+  const res = await fetch(`${baseUrl}/api/products/${id}`, {
     cache: "no-store",
   });
   if (!res.ok) return null;

@@ -6,6 +6,8 @@ import Link from "next/link";
 import { ChevronRight, Heart, ShoppingCart, Star, Truck, Shield } from "lucide-react";
 import Footer from "@/app/components/footer";
 
+// Get the base URL from environment or use a default
+const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
 export default function ProductClient({ product }) {
 
