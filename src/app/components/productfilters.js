@@ -25,11 +25,11 @@ const FilterContent = ({
   // Handle resetting filters
   const handleReset = () => {
     setTempCategory('all');
-    setTempPriceRange([0, 1000]);
+    setTempPriceRange([0, 100000000]);
     
     // If we want to apply reset immediately
     setSelectedCategory('all');
-    setPriceRange([0, 1000]);
+    setPriceRange([0, 100000000]);
     if (onApply) onApply();
   };
 
@@ -60,7 +60,7 @@ const FilterContent = ({
         <div className="mb-4">
           <h3 className="font-medium text-gray-800 mb-2 text-sm">Categories</h3>
           <div className="space-y-1">
-            {["all", "smartphones", "laptops"].map((category) => (
+            {["all", "smartphone", "laptop"].map((category) => (
               <button
                 key={category}
                 onClick={() => setTempCategory(category)}
@@ -96,7 +96,7 @@ const FilterContent = ({
                 <input
                   type="number"
                   value={tempPriceRange[1]}
-                  onChange={(e) => setTempPriceRange([tempPriceRange[0], parseInt(e.target.value) || 1000])}
+                  onChange={(e) => setTempPriceRange([tempPriceRange[0], parseInt(e.target.value) || 100000000])}
                   className="w-full pl-6 pr-2 py-1.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-purple-600 focus:border-transparent text-sm"
                   placeholder="Max"
                 />
@@ -106,7 +106,7 @@ const FilterContent = ({
               <input
                 type="range"
                 min="0"
-                max="1000"
+                max="100000000"
                 value={tempPriceRange[1]}
                 onChange={(e) => setTempPriceRange([tempPriceRange[0], parseInt(e.target.value)])}
                 className="w-full h-1.5 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-purple-600"
