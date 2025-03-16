@@ -16,6 +16,10 @@ export async function GET(request) {
     const minPrice = searchParams.get("minPrice") ? parseFloat(searchParams.get("minPrice")) : undefined;
     const maxPrice = searchParams.get("maxPrice") ? parseFloat(searchParams.get("maxPrice")) : undefined;
     const search = searchParams.get("search");
+    
+    // Read sort params
+    const sortBy = searchParams.get("sortBy") || "name";
+    const order = searchParams.get("order") || "asc";
 
     // Build where clause for filtering
     const where = {};
@@ -43,11 +47,15 @@ export async function GET(request) {
     // Calculate how many records to skip
     const skip = (page - 1) * limit;
 
-    // Fetch filtered products with pagination
+    // Build sort object
+    const orderBy = { [sortBy]: order };
+
+    // Fetch filtered products with pagination and sorting
     const products = await prisma.product.findMany({
       where,
       skip,
       take: limit,
+      orderBy,
     });
 
     // Count total filtered products
