@@ -30,25 +30,44 @@ export default function ProductsPage() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        // Pass page and limit as query params
-        const res = await fetch(
-          `/api/products?page=${currentPage}&limit=${limit}`
-        );
+        // Create query params with all filters
+        const queryParams = new URLSearchParams();
+        
+        // Add pagination params
+        queryParams.append('page', currentPage);
+        queryParams.append('limit', limit);
+        
+        // Add category filter if not 'all'
+        if (selectedCategory !== 'all') {
+          queryParams.append('category', selectedCategory);
+        }
+        
+        // Add price range filters
+        queryParams.append('minPrice', priceRange[0]);
+        queryParams.append('maxPrice', priceRange[1]);
+        
+        // Add search query if present
+        if (searchQuery.trim()) {
+          queryParams.append('search', searchQuery);
+        }
+        
+        // Fetch with all filters applied
+        const res = await fetch(`/api/products?${queryParams.toString()}`);
+        
         if (!res.ok) {
           throw new Error("Error fetching products");
         }
+        
         const data = await res.json();
-
-        // data should include { products, totalPages }
         setProducts(data.products);
         setTotalPages(data.totalPages);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
     };
-
+  
     fetchProducts();
-  }, [currentPage, limit]);
+  }, [currentPage, limit, selectedCategory, priceRange, searchQuery]);
 
   // 2. Handle Add to Cart
   const handleAddToCart = (product) => {
@@ -82,6 +101,22 @@ export default function ProductsPage() {
       setCurrentPage(newPage);
     }
   };
+
+  // Add a function to handle applying filters
+const handleApplyFilters = () => {
+  // When filters change, reset to first page
+  setCurrentPage(1);
+  // The useEffect will handle fetching with new filters
+};
+
+// Then pass this function to ProductFilters:
+<ProductFilters
+  selectedCategory={selectedCategory}
+  setSelectedCategory={setSelectedCategory}
+  priceRange={priceRange}
+  setPriceRange={setPriceRange}
+  onApplyFilters={handleApplyFilters}
+/>
 
   return (
     <div className="min-h-screen flex flex-col">

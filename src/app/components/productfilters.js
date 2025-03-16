@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Star, Search, X, SlidersHorizontal } from 'lucide-react';
 
 const FilterContent = ({ 
@@ -7,8 +7,32 @@ const FilterContent = ({
   priceRange,
   setPriceRange,
   isMobile,
-  onClose 
+  onClose,
+  onApply 
 }) => {
+  // Create temporary state for filters while editing
+  const [tempCategory, setTempCategory] = useState(selectedCategory);
+  const [tempPriceRange, setTempPriceRange] = useState(priceRange);
+
+  // Handle applying filters
+  const handleApply = () => {
+    setSelectedCategory(tempCategory);
+    setPriceRange(tempPriceRange);
+    if (onApply) onApply();
+    if (isMobile && onClose) onClose();
+  };
+
+  // Handle resetting filters
+  const handleReset = () => {
+    setTempCategory('all');
+    setTempPriceRange([0, 1000]);
+    
+    // If we want to apply reset immediately
+    setSelectedCategory('all');
+    setPriceRange([0, 1000]);
+    if (onApply) onApply();
+  };
+
   return (
     <div className={`bg-white rounded-2xl shadow-sm ${isMobile ? 'h-full' : 'p-4 sticky top-4'}`}>
       {isMobile && (
@@ -25,7 +49,6 @@ const FilterContent = ({
         </div>
       )}
 
-
       <div className={`${isMobile ? 'p-4' : ''}`}>
         {!isMobile && (
           <div className="border-b border-gray-100 pb-2 mb-4">
@@ -40,9 +63,9 @@ const FilterContent = ({
             {["all", "smartphones", "laptops"].map((category) => (
               <button
                 key={category}
-                onClick={() => setSelectedCategory(category)}
+                onClick={() => setTempCategory(category)}
                 className={`w-full px-3 py-1.5 rounded-lg text-left text-sm transition-all ${
-                  selectedCategory === category
+                  tempCategory === category
                     ? "bg-purple-600 text-white font-medium"
                     : "bg-gray-50 text-gray-700 hover:bg-gray-100"
                 }`}
@@ -62,8 +85,8 @@ const FilterContent = ({
                 <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500 text-sm">$</span>
                 <input
                   type="number"
-                  value={priceRange[0]}
-                  onChange={(e) => setPriceRange([parseInt(e.target.value), priceRange[1]])}
+                  value={tempPriceRange[0]}
+                  onChange={(e) => setTempPriceRange([parseInt(e.target.value) || 0, tempPriceRange[1]])}
                   className="w-full pl-6 pr-2 py-1.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-purple-600 focus:border-transparent text-sm"
                   placeholder="Min"
                 />
@@ -72,8 +95,8 @@ const FilterContent = ({
                 <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500 text-sm">$</span>
                 <input
                   type="number"
-                  value={priceRange[1]}
-                  onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
+                  value={tempPriceRange[1]}
+                  onChange={(e) => setTempPriceRange([tempPriceRange[0], parseInt(e.target.value) || 1000])}
                   className="w-full pl-6 pr-2 py-1.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-purple-600 focus:border-transparent text-sm"
                   placeholder="Max"
                 />
@@ -84,8 +107,8 @@ const FilterContent = ({
                 type="range"
                 min="0"
                 max="1000"
-                value={priceRange[1]}
-                onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
+                value={tempPriceRange[1]}
+                onChange={(e) => setTempPriceRange([tempPriceRange[0], parseInt(e.target.value)])}
                 className="w-full h-1.5 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-purple-600"
               />
               <div className="flex justify-between mt-1">
@@ -126,10 +149,16 @@ const FilterContent = ({
 
         {/* Action Buttons */}
         <div className={`space-y-2 ${isMobile ? 'mt-auto' : ''}`}>
-          <button className="w-full px-3 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors">
+          <button 
+            onClick={handleApply}
+            className="w-full px-3 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors"
+          >
             Apply Filters
           </button>
-          <button className="w-full px-3 py-2 bg-gray-50 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors">
+          <button 
+            onClick={handleReset}
+            className="w-full px-3 py-2 bg-gray-50 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors"
+          >
             Reset
           </button>
         </div>
@@ -142,7 +171,8 @@ const ProductFilters = ({
   selectedCategory,
   setSelectedCategory,
   priceRange,
-  setPriceRange
+  setPriceRange,
+  onApplyFilters
 }) => {
   const [isFilterOpen, setIsFilterOpen] = React.useState(false);
 
@@ -176,6 +206,7 @@ const ProductFilters = ({
           priceRange={priceRange}
           setPriceRange={setPriceRange}
           isMobile={false}
+          onApply={onApplyFilters}
         />
       </div>
 
@@ -215,6 +246,7 @@ const ProductFilters = ({
             setPriceRange={setPriceRange}
             isMobile={true}
             onClose={() => setIsFilterOpen(false)}
+            onApply={onApplyFilters}
           />
         </div>
       </div>
